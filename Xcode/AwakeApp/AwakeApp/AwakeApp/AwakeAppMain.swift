@@ -41,6 +41,23 @@ struct AwakeAppMain: App {
             menuBarLabel
         }
         .menuBarExtraStyle(.window)
+
+        // Settings window - opens separately from menu bar
+        Window("Settings", id: "settings") {
+            SettingsView()
+                .environmentObject(settings)
+        }
+        .windowStyle(.hiddenTitleBar)
+        .windowResizability(.contentSize)
+        .defaultPosition(.center)
+
+        // About window
+        Window("About AwakeApp", id: "about") {
+            AboutView()
+        }
+        .windowStyle(.hiddenTitleBar)
+        .windowResizability(.contentSize)
+        .defaultPosition(.center)
     }
 
     /// Menu bar icon with optional countdown

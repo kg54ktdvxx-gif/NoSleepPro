@@ -12,10 +12,9 @@ struct MenuBarView: View {
     @EnvironmentObject var caffeinateManager: CaffeinateManager
     @EnvironmentObject var settings: AppSettings
     @EnvironmentObject var automationManager: AutomationManager
+    @Environment(\.openWindow) private var openWindow
 
     @State private var showDurationPicker = false
-    @State private var showAbout = false
-    @State private var showSettings = false
     @State private var showCustomDuration = false
     @State private var customMinutes: String = ""
     @State private var aboutButtonHovered = false
@@ -36,19 +35,32 @@ struct MenuBarView: View {
 
                 Spacer()
 
-                Toggle("", isOn: Binding(
-                    get: { appState.isActive },
-                    set: { newValue in
-                        if newValue {
-                            activate(with: appState.currentPreset ?? .indefinite)
-                        } else {
-                            deactivate()
-                        }
+                // Custom styled power button
+                Button(action: {
+                    if appState.isActive {
+                        deactivate()
+                    } else {
+                        activate(with: appState.currentPreset ?? .indefinite)
                     }
-                ))
-                .toggleStyle(.switch)
-                .labelsHidden()
-                .scaleEffect(1.1)
+                }) {
+                    HStack(spacing: 6) {
+                        Image(systemName: appState.isActive ? "stop.fill" : "play.fill")
+                            .font(.system(size: 12, weight: .bold))
+                        Text(appState.isActive ? "ON" : "OFF")
+                            .font(.system(size: 13, weight: .bold))
+                    }
+                    .foregroundColor(.white)
+                    .padding(.horizontal, 14)
+                    .padding(.vertical, 8)
+                    .background(
+                        RoundedRectangle(cornerRadius: 8)
+                            .fill(appState.isActive
+                                ? LinearGradient(colors: [Color.green, Color.green.opacity(0.8)], startPoint: .top, endPoint: .bottom)
+                                : LinearGradient(colors: [Color.gray.opacity(0.6), Color.gray.opacity(0.4)], startPoint: .top, endPoint: .bottom))
+                    )
+                    .shadow(color: appState.isActive ? Color.green.opacity(0.4) : Color.clear, radius: 4, x: 0, y: 2)
+                }
+                .buttonStyle(.plain)
             }
             .padding(.horizontal, 20)
             .padding(.vertical, 16)
@@ -288,7 +300,7 @@ struct MenuBarView: View {
             }
 
             // Settings button
-            Button(action: { showSettings = true }) {
+            Button(action: { openWindow(id: "settings") }) {
                 HStack(spacing: 10) {
                     Image(systemName: "gear")
                         .font(.system(size: 16, weight: .medium))
@@ -319,7 +331,7 @@ struct MenuBarView: View {
             .keyboardShortcut(",", modifiers: .command)
 
             // About button
-            Button(action: { showAbout = true }) {
+            Button(action: { openWindow(id: "about") }) {
                 HStack(spacing: 10) {
                     Image(systemName: "info.circle")
                         .font(.system(size: 16, weight: .medium))
@@ -380,13 +392,6 @@ struct MenuBarView: View {
         }
         .frame(width: 340)
         .background(Color(nsColor: .windowBackgroundColor))
-        .sheet(isPresented: $showAbout) {
-            AboutView()
-        }
-        .sheet(isPresented: $showSettings) {
-            SettingsView()
-                .environmentObject(settings)
-        }
         .sheet(isPresented: $showCustomDuration) {
             CustomDurationSheet(
                 customMinutes: $customMinutes,
