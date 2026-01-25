@@ -4,6 +4,29 @@ A powerful macOS menu bar app that prevents your Mac from sleeping with smart au
 
 ## Current Version: 1.2
 
+---
+
+## Development Status
+
+**Last Session:** January 25, 2026
+
+### Completed:
+- [x] Git repository initialized (9 commits)
+- [x] Build errors fixed (Combine imports, Equatable)
+- [x] UI/UX improvements:
+  - Settings window opens properly (WindowManager)
+  - Clear ON/OFF toggle button (green/gray states)
+  - About window simplified (no animations)
+- [x] Test suite created (200+ tests) - needs Xcode test target
+
+### Next Steps:
+- [ ] Add test target to Xcode project
+- [ ] App Store screenshots
+- [ ] Final testing before submission
+- [ ] Create website for support/privacy URLs
+
+---
+
 ### What's New in v1.2
 - **Closed-Lid Mode** - Keep your Mac awake with the lid closed (requires external display + power)
 - **Comprehensive Test Suite** - 200+ unit and integration tests
