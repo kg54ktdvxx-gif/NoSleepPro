@@ -2,69 +2,191 @@
 //  AboutView.swift
 //  AwakeApp
 //
-//  Clean, simple about window for AwakeApp
+//  Modern, professional about window for AwakeApp
 //
 
 import SwiftUI
 
 struct AboutView: View {
     var body: some View {
-        VStack(spacing: 20) {
-            Spacer()
-                .frame(height: 10)
+        ZStack {
+            // Gradient background
+            LinearGradient(
+                colors: [
+                    Color(red: 0.95, green: 0.88, blue: 0.76).opacity(0.3),
+                    Color(red: 0.85, green: 0.75, blue: 0.65).opacity(0.2),
+                    Color(nsColor: .windowBackgroundColor)
+                ],
+                startPoint: .topLeading,
+                endPoint: .bottomTrailing
+            )
+            .ignoresSafeArea()
 
-            // App icon
-            Image(systemName: "cup.and.saucer.fill")
-                .font(.system(size: 60))
-                .foregroundStyle(
-                    LinearGradient(
-                        colors: [Color.brown, Color.brown.opacity(0.7)],
-                        startPoint: .topLeading,
-                        endPoint: .bottomTrailing
-                    )
+            VStack(spacing: 0) {
+                // Header section with coffee cup
+                VStack(spacing: 24) {
+                    Spacer()
+                        .frame(height: 30)
+
+                    // Coffee cup with glow effect
+                    ZStack {
+                        // Glow effect
+                        Circle()
+                            .fill(
+                                RadialGradient(
+                                    colors: [Color.brown.opacity(0.3), Color.clear],
+                                    center: .center,
+                                    startRadius: 10,
+                                    endRadius: 60
+                                )
+                            )
+                            .frame(width: 120, height: 120)
+                            .blur(radius: 10)
+
+                        // Coffee cup icon
+                        Image(systemName: "cup.and.saucer.fill")
+                            .font(.system(size: 70))
+                            .foregroundStyle(
+                                LinearGradient(
+                                    colors: [Color.brown, Color.brown.opacity(0.7)],
+                                    startPoint: .topLeading,
+                                    endPoint: .bottomTrailing
+                                )
+                            )
+                            .shadow(color: Color.brown.opacity(0.3), radius: 12, x: 0, y: 6)
+                    }
+
+                    // App name with gradient text
+                    Text("AwakeApp")
+                        .font(.system(size: 36, weight: .bold, design: .rounded))
+                        .foregroundStyle(
+                            LinearGradient(
+                                colors: [Color.primary, Color.primary.opacity(0.7)],
+                                startPoint: .leading,
+                                endPoint: .trailing
+                            )
+                        )
+
+                    Text("Version 1.2")
+                        .font(.system(size: 14, weight: .medium))
+                        .foregroundColor(.secondary)
+                        .padding(.top, -12)
+
+                    Spacer()
+                        .frame(height: 20)
+                }
+
+                // Feature highlights
+                VStack(spacing: 16) {
+                    FeatureRow(icon: "cup.and.saucer.fill", title: "Prevents Sleep", description: "Keep your Mac awake and productive")
+                    FeatureRow(icon: "keyboard", title: "Keyboard Shortcut", description: "Toggle with ⌘⇧A anywhere")
+                    FeatureRow(icon: "app.badge", title: "App Triggers", description: "Auto-activate for Zoom, PowerPoint, etc.")
+                    FeatureRow(icon: "calendar", title: "Schedules", description: "Stay awake during work hours")
+                    FeatureRow(icon: "battery.50", title: "Battery Protection", description: "Auto-stop when battery is low")
+                }
+                .padding(.horizontal, 30)
+                .padding(.vertical, 20)
+                .background(
+                    RoundedRectangle(cornerRadius: 16)
+                        .fill(Color(nsColor: .controlBackgroundColor).opacity(0.5))
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 16)
+                                .strokeBorder(Color.gray.opacity(0.2), lineWidth: 1)
+                        )
+                )
+                .padding(.horizontal, 24)
+
+                Spacer()
+                    .frame(height: 24)
+
+                // Fun description
+                VStack(spacing: 10) {
+                    Text("Keeping your Mac caffeinated since 2026")
+                        .font(.system(size: 13, weight: .medium))
+                        .foregroundColor(.secondary)
+
+                    Text("Because your Mac deserves to stay awake longer than you do.")
+                        .font(.system(size: 12))
+                        .foregroundColor(.secondary.opacity(0.8))
+                        .italic()
+                        .multilineTextAlignment(.center)
+                        .padding(.horizontal, 30)
+
+                    Text("Powered by IOKit Power Assertions")
+                        .font(.system(size: 11, design: .monospaced))
+                        .foregroundColor(.secondary.opacity(0.7))
+                        .padding(.top, 6)
+                }
+
+                Spacer()
+
+                // Footer with credits and close button
+                VStack(spacing: 16) {
+                    Divider()
+                        .padding(.horizontal, 40)
+
+                    Text("Made with ❤️ & 🤖 in 🇸🇬")
+                        .font(.system(size: 12))
+                        .foregroundColor(.secondary)
+
+                    Button(action: {
+                        NSApp.keyWindow?.close()
+                    }) {
+                        Text("Close")
+                            .font(.system(size: 14, weight: .semibold))
+                            .foregroundColor(.white)
+                            .frame(width: 120, height: 36)
+                            .background(
+                                LinearGradient(
+                                    colors: [Color.blue, Color.blue.opacity(0.8)],
+                                    startPoint: .top,
+                                    endPoint: .bottom
+                                )
+                            )
+                            .cornerRadius(8)
+                            .shadow(color: Color.blue.opacity(0.3), radius: 8, x: 0, y: 4)
+                    }
+                    .buttonStyle(.plain)
+                    .keyboardShortcut(.defaultAction)
+
+                    Spacer()
+                        .frame(height: 20)
+                }
+            }
+        }
+        .frame(width: 480, height: 650)
+    }
+}
+
+// Feature row component
+struct FeatureRow: View {
+    let icon: String
+    let title: String
+    let description: String
+
+    var body: some View {
+        HStack(spacing: 14) {
+            Image(systemName: icon)
+                .font(.system(size: 22))
+                .foregroundColor(.blue)
+                .frame(width: 32, height: 32)
+                .background(
+                    Circle()
+                        .fill(Color.blue.opacity(0.12))
                 )
 
-            // App name
-            Text("AwakeApp")
-                .font(.system(size: 28, weight: .bold, design: .rounded))
+            VStack(alignment: .leading, spacing: 3) {
+                Text(title)
+                    .font(.system(size: 14, weight: .semibold))
+                    .foregroundColor(.primary)
 
-            Text("Version 1.2")
-                .font(.system(size: 13))
-                .foregroundColor(.secondary)
-
-            Divider()
-                .padding(.horizontal, 40)
-
-            // Description
-            VStack(spacing: 8) {
-                Text("Keep your Mac awake")
-                    .font(.system(size: 14, weight: .medium))
-
-                Text("Prevents sleep with smart automation,\nschedules, and battery protection.")
+                Text(description)
                     .font(.system(size: 12))
                     .foregroundColor(.secondary)
-                    .multilineTextAlignment(.center)
             }
 
             Spacer()
-
-            // Footer
-            VStack(spacing: 12) {
-                Text("Made with ❤️ & 🤖 in 🇸🇬")
-                    .font(.system(size: 11))
-                    .foregroundColor(.secondary)
-
-                Button("Close") {
-                    NSApp.keyWindow?.close()
-                }
-                .keyboardShortcut(.defaultAction)
-            }
-
-            Spacer()
-                .frame(height: 10)
         }
-        .frame(width: 280, height: 320)
-        .background(Color(nsColor: .windowBackgroundColor))
     }
 }
 
