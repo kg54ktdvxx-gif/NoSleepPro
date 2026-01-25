@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import Combine
 import IOKit.pwr_mgt
 import IOKit.ps
 import os.log

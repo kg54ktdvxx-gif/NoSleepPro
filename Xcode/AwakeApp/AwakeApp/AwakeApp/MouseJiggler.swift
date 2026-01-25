@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import Combine
 import CoreGraphics
 import AppKit
 import os.log

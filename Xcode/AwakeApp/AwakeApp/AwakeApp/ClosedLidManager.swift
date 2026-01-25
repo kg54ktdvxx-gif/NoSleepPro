@@ -7,6 +7,8 @@
 //
 
 import Foundation
+import Combine
+import SwiftUI
 import IOKit
 import IOKit.pwr_mgt
 import IOKit.ps
@@ -300,13 +302,13 @@ final class ClosedLidManager: ObservableObject {
 
 extension AppSettings {
     /// Enable closed-lid mode feature
-    @AppStorage("closedLidModeEnabled") var closedLidModeEnabled: Bool {
+    var closedLidModeEnabled: Bool {
         get { UserDefaults.standard.bool(forKey: "closedLidModeEnabled") }
         set { UserDefaults.standard.set(newValue, forKey: "closedLidModeEnabled") }
     }
 
     /// Auto-enable closed-lid when conditions are met
-    @AppStorage("autoEnableClosedLid") var autoEnableClosedLid: Bool {
+    var autoEnableClosedLid: Bool {
         get { UserDefaults.standard.bool(forKey: "autoEnableClosedLid") }
         set { UserDefaults.standard.set(newValue, forKey: "autoEnableClosedLid") }
     }

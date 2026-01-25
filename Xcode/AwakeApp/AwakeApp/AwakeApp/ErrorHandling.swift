@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Combine
 import os.log
 
 private let logger = Logger(subsystem: "com.awakeapp", category: "Error")
@@ -13,10 +14,23 @@ private let logger = Logger(subsystem: "com.awakeapp", category: "Error")
 // MARK: - App Error Types
 
 /// Errors related to WiFi monitoring
-enum WiFiError: LocalizedError {
+enum WiFiError: LocalizedError, Equatable {
     case noInterface
     case monitoringFailed(underlying: Error?)
     case ssidUnavailable
+
+    static func == (lhs: WiFiError, rhs: WiFiError) -> Bool {
+        switch (lhs, rhs) {
+        case (.noInterface, .noInterface):
+            return true
+        case (.ssidUnavailable, .ssidUnavailable):
+            return true
+        case (.monitoringFailed, .monitoringFailed):
+            return true
+        default:
+            return false
+        }
+    }
 
     var errorDescription: String? {
         switch self {

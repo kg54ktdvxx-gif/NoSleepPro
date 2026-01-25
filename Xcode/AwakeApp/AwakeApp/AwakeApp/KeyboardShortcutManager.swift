@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Combine
 import Carbon.HIToolbox
 import AppKit
 import os.log

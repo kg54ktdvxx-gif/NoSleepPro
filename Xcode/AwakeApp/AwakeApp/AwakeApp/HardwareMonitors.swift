@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Combine
 import AppKit
 import IOKit.ps
 import os.log
