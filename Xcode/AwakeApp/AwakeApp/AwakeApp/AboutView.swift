@@ -23,38 +23,10 @@ struct AboutView: View {
             .ignoresSafeArea()
 
             VStack(spacing: 0) {
-                // Header section with coffee cup
-                VStack(spacing: 24) {
+                // Header section
+                VStack(spacing: 16) {
                     Spacer()
-                        .frame(height: 50)
-
-                    // Coffee cup with glow effect
-                    ZStack {
-                        // Glow effect
-                        Circle()
-                            .fill(
-                                RadialGradient(
-                                    colors: [Color.brown.opacity(0.3), Color.clear],
-                                    center: .center,
-                                    startRadius: 10,
-                                    endRadius: 60
-                                )
-                            )
-                            .frame(width: 120, height: 120)
-                            .blur(radius: 10)
-
-                        // Coffee cup icon
-                        Image(systemName: "cup.and.saucer.fill")
-                            .font(.system(size: 70))
-                            .foregroundStyle(
-                                LinearGradient(
-                                    colors: [Color.brown, Color.brown.opacity(0.7)],
-                                    startPoint: .topLeading,
-                                    endPoint: .bottomTrailing
-                                )
-                            )
-                            .shadow(color: Color.brown.opacity(0.3), radius: 12, x: 0, y: 6)
-                    }
+                        .frame(height: 40)
 
                     // App name with gradient text
                     Text("AwakeApp")
@@ -107,20 +79,6 @@ struct AboutView: View {
                 }
                 .padding(.vertical, 16)
 
-                // Fun description
-                VStack(spacing: 8) {
-                    Text("Keeping your Mac caffeinated since 2026")
-                        .font(.system(size: 13, weight: .medium))
-                        .foregroundColor(.secondary)
-
-                    Text("Because your Mac deserves to stay awake longer than you do.")
-                        .font(.system(size: 12))
-                        .foregroundColor(.secondary.opacity(0.8))
-                        .italic()
-                        .multilineTextAlignment(.center)
-                        .padding(.horizontal, 30)
-                }
-
                 Spacer()
 
                 // Footer with credits and close button
@@ -128,8 +86,8 @@ struct AboutView: View {
                     Divider()
                         .padding(.horizontal, 40)
 
-                    Text("Made with ❤️ & 🤖 in 🇸🇬")
-                        .font(.system(size: 12))
+                    Text("Built with ❤️ & 🤖 in 🇸🇬")
+                        .font(.system(size: 13))
                         .foregroundColor(.secondary)
 
                     Button(action: {
@@ -157,7 +115,7 @@ struct AboutView: View {
                 }
             }
         }
-        .frame(width: 480, height: 650)
+        .frame(width: 480, height: 520)
     }
 }
 

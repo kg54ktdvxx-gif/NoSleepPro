@@ -56,7 +56,7 @@ final class WindowManager: ObservableObject {
         let window = NSWindow(contentViewController: hostingController)
         window.title = "About AwakeApp"
         window.styleMask = [.titled, .closable]
-        window.setContentSize(NSSize(width: 480, height: 650))
+        window.setContentSize(NSSize(width: 480, height: 520))
         window.center()
         window.isReleasedWhenClosed = false
 
