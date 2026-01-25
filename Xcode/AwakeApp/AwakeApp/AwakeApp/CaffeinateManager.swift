@@ -1,0 +1,197 @@
+//
+//  CaffeinateManager.swift
+//  AwakeApp
+//
+//  Manages power assertions to prevent Mac from sleeping
+//  Uses IOKit APIs for Mac App Store compatibility
+//
+
+import Foundation
+import IOKit.pwr_mgt
+import IOKit.ps
+import os.log
+
+/// Logger for power management events
+private let logger = Logger(subsystem: "com.awakeapp", category: "PowerManagement")
+
+/// Error types for power management operations
+enum PowerManagementError: LocalizedError {
+    case assertionCreationFailed(IOReturn)
+    case assertionReleaseFailed(IOReturn)
+
+    var errorDescription: String? {
+        switch self {
+        case .assertionCreationFailed(let status):
+            return "Failed to create power assertion (error: \(status))"
+        case .assertionReleaseFailed(let status):
+            return "Failed to release power assertion (error: \(status))"
+        }
+    }
+}
+
+/// Reason why sleep prevention was activated
+enum ActivationReason: Equatable {
+    case manual
+    case schedule
+    case appTrigger(appName: String)
+    case keyboardShortcut
+    case wifiTrigger(ssid: String)
+    case hardwareTrigger(type: String)
+
+    var description: String {
+        switch self {
+        case .manual: return "Manual"
+        case .schedule: return "Schedule"
+        case .appTrigger(let appName): return "App: \(appName)"
+        case .keyboardShortcut: return "Shortcut"
+        case .wifiTrigger(let ssid): return "Wi-Fi: \(ssid)"
+        case .hardwareTrigger(let type): return "Hardware: \(type)"
+        }
+    }
+}
+
+@MainActor
+final class CaffeinateManager: ObservableObject {
+    /// Current power assertion ID (nil when not active)
+    private var assertionID: IOPMAssertionID?
+
+    /// Timer for auto-stopping after duration
+    private var durationTimer: Timer?
+
+    /// Published error state for UI feedback
+    @Published var lastError: PowerManagementError?
+
+    /// Reason for current activation
+    @Published var activationReason: ActivationReason?
+
+    /// Whether display sleep is allowed (only system stays awake)
+    private var allowDisplaySleep: Bool = false
+
+    /// Start preventing sleep with optional duration
+    /// - Parameters:
+    ///   - duration: Duration in seconds, or nil for indefinite
+    ///   - allowDisplaySleep: If true, display can sleep but system stays awake
+    ///   - reason: Why sleep prevention was activated
+    func start(duration: Int?, allowDisplaySleep: Bool = false, reason: ActivationReason = .manual) {
+        // Stop any existing assertion first
+        stop()
+
+        // Clear previous errors
+        lastError = nil
+        self.allowDisplaySleep = allowDisplaySleep
+        self.activationReason = reason
+
+        // Create power assertion
+        var assertionID: IOPMAssertionID = 0
+        let assertionName = "AwakeApp preventing sleep" as CFString
+
+        // Choose assertion type based on display sleep preference
+        let assertionType = allowDisplaySleep
+            ? kIOPMAssertionTypeNoIdleSleep as CFString  // System awake, display can sleep
+            : kIOPMAssertionTypeNoDisplaySleep as CFString // Both system and display awake
+
+        let result = IOPMAssertionCreateWithName(
+            assertionType,
+            IOPMAssertionLevel(kIOPMAssertionLevelOn),
+            assertionName,
+            &assertionID
+        )
+
+        if result == kIOReturnSuccess {
+            self.assertionID = assertionID
+            logger.info("Power assertion created (ID: \(assertionID), displaySleep: \(allowDisplaySleep), reason: \(reason.description))")
+
+            // Set up duration timer if specified
+            if let seconds = duration {
+                setupDurationTimer(seconds: seconds)
+            }
+        } else {
+            let error = PowerManagementError.assertionCreationFailed(result)
+            lastError = error
+            activationReason = nil
+            logger.error("Failed to create power assertion: \(error.localizedDescription)")
+        }
+    }
+
+    /// Stop preventing sleep
+    func stop() {
+        // Cancel duration timer
+        durationTimer?.invalidate()
+        durationTimer = nil
+
+        // Release power assertion if active
+        guard let assertionID = assertionID else { return }
+
+        let result = IOPMAssertionRelease(assertionID)
+
+        if result == kIOReturnSuccess {
+            logger.info("Power assertion released successfully")
+        } else {
+            let error = PowerManagementError.assertionReleaseFailed(result)
+            lastError = error
+            logger.error("Failed to release power assertion: \(error.localizedDescription)")
+        }
+
+        self.assertionID = nil
+        self.activationReason = nil
+    }
+
+    /// Check if sleep prevention is currently active
+    var isRunning: Bool {
+        assertionID != nil
+    }
+
+    /// Set up timer to auto-stop after duration
+    private func setupDurationTimer(seconds: Int) {
+        durationTimer = Timer.scheduledTimer(withTimeInterval: TimeInterval(seconds), repeats: false) { [weak self] _ in
+            Task { @MainActor [weak self] in
+                self?.stop()
+                logger.info("Duration timer expired, power assertion released")
+            }
+        }
+    }
+
+    // MARK: - Battery Monitoring
+
+    /// Get current battery level (0-100) or nil if on AC power or no battery
+    static func getBatteryLevel() -> Int? {
+        let snapshot = IOPSCopyPowerSourcesInfo().takeRetainedValue()
+        let sources = IOPSCopyPowerSourcesList(snapshot).takeRetainedValue() as Array
+
+        for source in sources {
+            let description = IOPSGetPowerSourceDescription(snapshot, source).takeUnretainedValue() as! [String: Any]
+
+            if let type = description[kIOPSTypeKey] as? String,
+               type == kIOPSInternalBatteryType {
+                // Check if on battery power
+                if let powerSource = description[kIOPSPowerSourceStateKey] as? String,
+                   powerSource == kIOPSBatteryPowerValue {
+                    // Return battery level
+                    if let capacity = description[kIOPSCurrentCapacityKey] as? Int {
+                        return capacity
+                    }
+                }
+            }
+        }
+
+        return nil // On AC power or no battery
+    }
+
+    /// Check if Mac is currently on battery power
+    static func isOnBatteryPower() -> Bool {
+        getBatteryLevel() != nil
+    }
+
+    /// Alias for isOnBatteryPower for convenience
+    static func isOnBattery() -> Bool {
+        isOnBatteryPower()
+    }
+
+    /// Cleanup on deallocation
+    deinit {
+        if let assertionID = assertionID {
+            IOPMAssertionRelease(assertionID)
+        }
+        durationTimer?.invalidate()
+    }
+}

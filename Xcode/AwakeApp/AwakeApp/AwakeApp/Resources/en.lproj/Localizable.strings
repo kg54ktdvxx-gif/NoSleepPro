@@ -1,0 +1,184 @@
+/*
+  Localizable.strings
+  AwakeApp
+
+  English localization strings
+*/
+
+// MARK: - App General
+"app.name" = "AwakeApp";
+"app.tagline" = "Keep your Mac awake";
+
+// MARK: - Menu Bar
+"menubar.active" = "Active";
+"menubar.inactive" = "Inactive";
+"menubar.remaining" = "remaining";
+"menubar.running_indefinitely" = "Running indefinitely";
+
+// MARK: - Duration Presets
+"duration.15_minutes" = "15 minutes";
+"duration.30_minutes" = "30 minutes";
+"duration.1_hour" = "1 hour";
+"duration.2_hours" = "2 hours";
+"duration.5_hours" = "5 hours";
+"duration.indefinite" = "Indefinite";
+"duration.custom" = "Custom";
+"duration.minutes" = "minutes";
+"duration.hours" = "hours";
+"duration.forever" = "forever";
+
+// MARK: - Duration Picker
+"duration.title" = "Duration";
+"duration.custom_prompt" = "Custom duration...";
+"duration.custom_title" = "Custom Duration";
+"duration.enter_minutes" = "Enter 1-1440 minutes";
+
+// MARK: - Actions
+"action.stop_timer" = "Stop Timer";
+"action.start" = "Start";
+"action.cancel" = "Cancel";
+"action.add" = "Add";
+"action.quit" = "Quit AwakeApp";
+"action.grant" = "Grant";
+"action.reset" = "Reset";
+
+// MARK: - Settings
+"settings.title" = "Settings";
+"settings.general" = "General";
+"settings.automation" = "Automation";
+"settings.schedule" = "Schedule";
+"settings.apps" = "Apps";
+"settings.wifi" = "Wi-Fi";
+
+// MARK: - General Settings
+"settings.display_options" = "Display Options";
+"settings.menubar_icon" = "Menu bar icon:";
+"settings.show_countdown" = "Show countdown in menu bar";
+"settings.allow_display_sleep" = "Allow display to sleep";
+"settings.launch_at_login" = "Launch at login";
+
+// MARK: - Notifications Settings
+"settings.notifications" = "Notifications";
+"settings.notify_timer_end" = "Notify when timer ends";
+"settings.notify_battery" = "Notify on battery protection";
+
+// MARK: - Keyboard Shortcut Settings
+"settings.keyboard_shortcut" = "Keyboard Shortcut";
+"settings.enable_shortcut" = "Enable keyboard shortcut";
+"settings.shortcut" = "Shortcut:";
+"settings.default_duration" = "Default duration:";
+"settings.press_shortcut" = "Press shortcut...";
+"settings.reset_default" = "Reset to default";
+
+// MARK: - Mouse Jiggler Settings
+"settings.mouse_jiggler" = "Mouse Jiggler";
+"settings.enable_jiggler" = "Enable mouse jiggler";
+"settings.jiggle_interval" = "Jiggle interval:";
+"settings.jiggler_description" = "Moves the cursor slightly to prevent apps like Slack or Teams from marking you as 'Away'.";
+"settings.accessibility_granted" = "Accessibility permission granted";
+"settings.accessibility_required" = "Accessibility permission required";
+
+// MARK: - Battery Settings
+"settings.battery_protection" = "Battery Protection";
+"settings.enable_battery" = "Enable battery protection";
+"settings.battery_threshold" = "Stop when battery below:";
+"settings.battery_description" = "Automatically stop sleep prevention if your battery drops below the threshold.";
+"settings.battery_current" = "Current: %d%%";
+"settings.connected_to_power" = "Connected to power";
+
+// MARK: - Hardware Triggers
+"settings.hardware_triggers" = "Hardware Triggers";
+"settings.enable_hardware" = "Enable hardware triggers";
+"settings.activate_power" = "Activate when power adapter connected";
+"settings.deactivate_battery" = "Deactivate when on battery";
+"settings.activate_display" = "Activate when external display connected";
+"settings.hardware_description" = "Automatically control sleep prevention based on hardware connections.";
+
+// MARK: - Schedule Settings
+"settings.enable_schedules" = "Enable schedules";
+"settings.add_schedule" = "Add Schedule";
+"settings.no_schedules" = "No schedules configured";
+"settings.schedules_description" = "Add a schedule to automatically keep your Mac awake during specific times.";
+"schedule.days" = "Days";
+"schedule.start_time" = "Start Time";
+"schedule.end_time" = "End Time";
+
+// MARK: - App Triggers Settings
+"settings.enable_app_triggers" = "Enable app triggers";
+"settings.add_app" = "Add App";
+"settings.no_app_triggers" = "No app triggers configured";
+"settings.app_triggers_description" = "Add apps that will automatically activate sleep prevention when running.";
+"settings.select_app" = "Select App";
+"settings.select_app_description" = "Choose an app that will automatically activate sleep prevention when running.";
+
+// MARK: - Wi-Fi Triggers Settings
+"settings.enable_wifi_triggers" = "Enable Wi-Fi triggers";
+"settings.add_network" = "Add Network";
+"settings.add_current" = "Add Current";
+"settings.no_wifi_triggers" = "No Wi-Fi triggers configured";
+"settings.wifi_triggers_description" = "Add Wi-Fi networks that will automatically activate sleep prevention when connected.";
+"settings.connected_to" = "Connected to: %@";
+"wifi.connected" = "Connected";
+"wifi.add_title" = "Add Wi-Fi Network";
+"wifi.add_description" = "Enter the name (SSID) of the Wi-Fi network that should activate sleep prevention.";
+"wifi.network_name" = "Network name (SSID)";
+
+// MARK: - Icon Picker
+"icon.choose_style" = "Choose Icon Style";
+"icon.preview_note" = "Preview shows active state";
+"icon.coffee_cup" = "Coffee Cup";
+"icon.moon" = "Moon";
+"icon.lightning_bolt" = "Lightning Bolt";
+"icon.eye" = "Eye";
+"icon.sun" = "Sun";
+"icon.battery" = "Battery";
+"icon.clock" = "Clock";
+"icon.power" = "Power";
+
+// MARK: - Automation Status
+"auto.manual" = "Manual activation";
+"auto.schedule" = "Activated by schedule";
+"auto.app" = "Triggered by %@";
+"auto.shortcut" = "Activated via shortcut";
+"auto.wifi" = "Connected to %@";
+"auto.hardware" = "%@ detected";
+"auto.badge" = "Auto";
+
+// MARK: - Warnings & Errors
+"warning.battery_stopped" = "Stopped to preserve battery";
+"error.accessibility_required" = "Accessibility permission required";
+"error.wifi_unavailable" = "No Wi-Fi interface available";
+
+// MARK: - About View
+"about.title" = "About AwakeApp";
+"about.version" = "Version %@";
+"about.description" = "A simple, elegant utility to prevent your Mac from sleeping.";
+"about.features" = "Features";
+"about.feature.timer" = "Timed or indefinite modes";
+"about.feature.schedule" = "Schedule-based activation";
+"about.feature.battery" = "Battery protection";
+"about.feature.shortcuts" = "Custom keyboard shortcuts";
+"about.feature.triggers" = "App & Wi-Fi triggers";
+"about.made_with" = "Made with love in Singapore";
+
+// MARK: - Notifications
+"notification.timer_ended.title" = "Timer Ended";
+"notification.timer_ended.body" = "%@ timer completed. Your Mac can now sleep normally.";
+"notification.battery.title" = "Battery Protection Activated";
+"notification.battery.body" = "Sleep prevention stopped at %d%% battery to preserve power.";
+
+// MARK: - Weekdays
+"weekday.sunday" = "Sunday";
+"weekday.monday" = "Monday";
+"weekday.tuesday" = "Tuesday";
+"weekday.wednesday" = "Wednesday";
+"weekday.thursday" = "Thursday";
+"weekday.friday" = "Friday";
+"weekday.saturday" = "Saturday";
+"weekday.sun" = "Sun";
+"weekday.mon" = "Mon";
+"weekday.tue" = "Tue";
+"weekday.wed" = "Wed";
+"weekday.thu" = "Thu";
+"weekday.fri" = "Fri";
+"weekday.sat" = "Sat";
