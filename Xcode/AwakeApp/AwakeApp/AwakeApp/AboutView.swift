@@ -26,7 +26,7 @@ struct AboutView: View {
                 // Header section with coffee cup
                 VStack(spacing: 24) {
                     Spacer()
-                        .frame(height: 30)
+                        .frame(height: 50)
 
                     // Coffee cup with glow effect
                     ZStack {
@@ -99,8 +99,16 @@ struct AboutView: View {
                 Spacer()
                     .frame(height: 24)
 
+                // Links section
+                HStack(spacing: 24) {
+                    LinkButton(title: "Website", icon: "globe", url: "https://awakeapp.com")
+                    LinkButton(title: "Support", icon: "questionmark.circle", url: "https://awakeapp.com/support")
+                    LinkButton(title: "Privacy", icon: "hand.raised", url: "https://awakeapp.com/privacy")
+                }
+                .padding(.vertical, 16)
+
                 // Fun description
-                VStack(spacing: 10) {
+                VStack(spacing: 8) {
                     Text("Keeping your Mac caffeinated since 2026")
                         .font(.system(size: 13, weight: .medium))
                         .foregroundColor(.secondary)
@@ -111,11 +119,6 @@ struct AboutView: View {
                         .italic()
                         .multilineTextAlignment(.center)
                         .padding(.horizontal, 30)
-
-                    Text("Powered by IOKit Power Assertions")
-                        .font(.system(size: 11, design: .monospaced))
-                        .foregroundColor(.secondary.opacity(0.7))
-                        .padding(.top, 6)
                 }
 
                 Spacer()
@@ -186,6 +189,42 @@ struct FeatureRow: View {
             }
 
             Spacer()
+        }
+    }
+}
+
+// Link button component
+struct LinkButton: View {
+    let title: String
+    let icon: String
+    let url: String
+    @State private var isHovering = false
+
+    var body: some View {
+        Button(action: {
+            if let url = URL(string: url) {
+                NSWorkspace.shared.open(url)
+            }
+        }) {
+            VStack(spacing: 6) {
+                Image(systemName: icon)
+                    .font(.system(size: 20))
+                    .foregroundColor(isHovering ? .blue : .secondary)
+                Text(title)
+                    .font(.system(size: 11, weight: .medium))
+                    .foregroundColor(isHovering ? .blue : .secondary)
+            }
+            .frame(width: 70, height: 50)
+            .background(
+                RoundedRectangle(cornerRadius: 8)
+                    .fill(isHovering ? Color.blue.opacity(0.1) : Color.clear)
+            )
+        }
+        .buttonStyle(.plain)
+        .onHover { hovering in
+            withAnimation(.easeInOut(duration: 0.15)) {
+                isHovering = hovering
+            }
         }
     }
 }
