@@ -71,14 +71,6 @@ struct AboutView: View {
                 Spacer()
                     .frame(height: 24)
 
-                // Links section
-                HStack(spacing: 24) {
-                    LinkButton(title: "Website", icon: "globe", url: "https://awakeapp.com")
-                    LinkButton(title: "Support", icon: "questionmark.circle", url: "https://awakeapp.com/support")
-                    LinkButton(title: "Privacy", icon: "hand.raised", url: "https://awakeapp.com/privacy")
-                }
-                .padding(.vertical, 16)
-
                 Spacer()
 
                 // Footer with credits and close button
@@ -115,7 +107,7 @@ struct AboutView: View {
                 }
             }
         }
-        .frame(width: 480, height: 520)
+        .frame(width: 480, height: 460)
     }
 }
 
@@ -147,42 +139,6 @@ struct FeatureRow: View {
             }
 
             Spacer()
-        }
-    }
-}
-
-// Link button component
-struct LinkButton: View {
-    let title: String
-    let icon: String
-    let url: String
-    @State private var isHovering = false
-
-    var body: some View {
-        Button(action: {
-            if let url = URL(string: url) {
-                NSWorkspace.shared.open(url)
-            }
-        }) {
-            VStack(spacing: 6) {
-                Image(systemName: icon)
-                    .font(.system(size: 20))
-                    .foregroundColor(isHovering ? .blue : .secondary)
-                Text(title)
-                    .font(.system(size: 11, weight: .medium))
-                    .foregroundColor(isHovering ? .blue : .secondary)
-            }
-            .frame(width: 70, height: 50)
-            .background(
-                RoundedRectangle(cornerRadius: 8)
-                    .fill(isHovering ? Color.blue.opacity(0.1) : Color.clear)
-            )
-        }
-        .buttonStyle(.plain)
-        .onHover { hovering in
-            withAnimation(.easeInOut(duration: 0.15)) {
-                isHovering = hovering
-            }
         }
     }
 }
