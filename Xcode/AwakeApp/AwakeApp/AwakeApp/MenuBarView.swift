@@ -12,7 +12,6 @@ struct MenuBarView: View {
     @EnvironmentObject var caffeinateManager: CaffeinateManager
     @EnvironmentObject var settings: AppSettings
     @EnvironmentObject var automationManager: AutomationManager
-    @Environment(\.openWindow) private var openWindow
 
     @State private var showDurationPicker = false
     @State private var showCustomDuration = false
@@ -300,7 +299,7 @@ struct MenuBarView: View {
             }
 
             // Settings button
-            Button(action: { openWindow(id: "settings") }) {
+            Button(action: { WindowManager.shared.openSettings() }) {
                 HStack(spacing: 10) {
                     Image(systemName: "gear")
                         .font(.system(size: 16, weight: .medium))
@@ -331,7 +330,7 @@ struct MenuBarView: View {
             .keyboardShortcut(",", modifiers: .command)
 
             // About button
-            Button(action: { openWindow(id: "about") }) {
+            Button(action: { WindowManager.shared.openAbout() }) {
                 HStack(spacing: 10) {
                     Image(systemName: "info.circle")
                         .font(.system(size: 16, weight: .medium))
