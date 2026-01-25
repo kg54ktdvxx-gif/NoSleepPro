@@ -78,7 +78,7 @@ struct AboutView: View {
                     Divider()
                         .padding(.horizontal, 40)
 
-                    Text("Built with ❤️ & 🤖 in 🇸🇬")
+                    Text("Built with  ❤️  &  🤖  in  🇸🇬")
                         .font(.system(size: 13))
                         .foregroundColor(.secondary)
 
