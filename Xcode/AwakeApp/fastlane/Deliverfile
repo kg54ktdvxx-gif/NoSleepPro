@@ -21,7 +21,7 @@ automatic_release(false)          # Manually release after approval
 phased_release(false)
 
 # Skip uploading these if not ready yet
-skip_screenshots(true)            # Set to false once screenshots are in place
+skip_screenshots(false)
 skip_metadata(false)
 
 # Force overwrite any existing metadata
