@@ -1,0 +1,33 @@
+No Sleep Pro is a lightweight macOS menu bar app that prevents your Mac from sleeping — with a single click.
+
+Whether you're giving a presentation, downloading large files, running a long build, or just want your screen to stay on, No Sleep Pro gives you complete control over when your Mac sleeps.
+
+TIMER PRESETS
+Choose from 15 minutes, 30 minutes, 1 hour, 2 hours, 5 hours, or run indefinitely. Set a custom duration for any length you need. A visual countdown ring in the menu bar shows exactly how much time remains.
+
+SMART AUTOMATION
+Set it and forget it. No Sleep Pro can activate automatically based on:
+• App Triggers — Stay awake when Zoom, PowerPoint, Keynote, or Chrome is running. Add any app you want.
+• Schedules — Define work hours (e.g., 9 AM–5 PM, Mon–Fri) and sleep prevention activates automatically.
+• Hardware Triggers — Activate when your power adapter or external display is connected.
+
+CLOSED-LID MODE
+Keep your Mac running with the lid closed when connected to an external display and power. Perfect for desktop setups using your MacBook as a workstation.
+
+MOUSE JIGGLER
+Prevent "Away" status in Slack, Teams, and other messaging apps. The cursor moves one pixel at configurable intervals — completely invisible during normal use.
+
+BATTERY PROTECTION
+No Sleep Pro watches your battery level and automatically stops when it drops below your chosen threshold (10–30%). Your laptop is always protected from draining to zero.
+
+GLOBAL KEYBOARD SHORTCUT
+Toggle sleep prevention instantly from any app with a customizable keyboard shortcut. Default: ⌘⇧A.
+
+8 MENU BAR ICON STYLES
+Choose from Coffee Cup, Moon, Lightning Bolt, Eye, Sun, Battery, Clock, or Power icons. Pick the one that fits your menu bar aesthetic.
+
+PRIVACY FIRST
+No Sleep Pro collects zero data. No analytics, no tracking, no accounts, no network requests. All settings are stored locally on your Mac. Your privacy is absolute.
+
+BUILT FOR macOS
+Native SwiftUI app designed exclusively for macOS. Runs in your menu bar with no Dock icon, minimal memory footprint, and instant response times.

@@ -1,0 +1,23 @@
+No Sleep Pro is a menu bar utility that prevents macOS from sleeping. It does not require login or account creation.
+
+To test:
+1. Launch the app — it appears as an icon in the menu bar (no Dock icon).
+2. Click the menu bar icon to open the dropdown panel.
+3. Tap a timer preset (e.g., "1 Hour") to activate sleep prevention.
+4. The icon fills and a countdown appears.
+5. Click "Stop" or let the timer expire to deactivate.
+
+Optional features requiring Accessibility permission (System Settings > Privacy & Security > Accessibility):
+- Mouse Jiggler: Enable in Settings > General
+- Global Keyboard Shortcut: Enable in Settings > General
+
+Automation features (Settings > Automation tab):
+- Battery Protection: Auto-stops at configurable battery threshold
+- Hardware Triggers: Activates on power/display connect
+- Closed-Lid Mode: Keeps Mac awake with lid closed (requires external display + power)
+
+Schedule features (Settings > Schedule tab):
+- Set day/time windows for automatic activation
+
+App Triggers (Settings > Apps tab):
+- Auto-activates when specified apps (Zoom, PowerPoint, etc.) are running

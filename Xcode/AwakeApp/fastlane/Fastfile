@@ -1,0 +1,40 @@
+default_platform(:mac)
+
+platform :mac do
+
+  desc "Upload metadata to App Store Connect (no binary)"
+  lane :metadata do
+    deliver(
+      skip_binary_upload: true,
+      skip_screenshots: true,
+      force: true
+    )
+  end
+
+  desc "Upload screenshots to App Store Connect"
+  lane :screenshots do
+    deliver(
+      skip_binary_upload: true,
+      skip_metadata: true,
+      force: true
+    )
+  end
+
+  desc "Upload metadata + screenshots"
+  lane :upload_all do
+    deliver(
+      skip_binary_upload: true,
+      force: true
+    )
+  end
+
+  desc "Submit for App Store review"
+  lane :submit do
+    deliver(
+      submit_for_review: true,
+      automatic_release: false,
+      force: true
+    )
+  end
+
+end

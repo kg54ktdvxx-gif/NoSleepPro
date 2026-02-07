@@ -1,0 +1,10 @@
+Initial release of No Sleep Pro — a powerful menu bar utility to keep your Mac awake.
+
+• Timer presets: 15 min to indefinite
+• Smart automation: app triggers, schedules, hardware detection
+• Closed-lid mode for external display setups
+• Mouse jiggler to prevent Away status
+• Battery protection with configurable threshold
+• Global keyboard shortcut (⌘⇧A)
+• 8 menu bar icon styles
+• Zero data collection
