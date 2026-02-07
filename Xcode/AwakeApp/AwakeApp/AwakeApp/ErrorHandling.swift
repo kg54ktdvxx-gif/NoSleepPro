@@ -13,51 +13,6 @@ private let logger = Logger(subsystem: "com.awakeapp", category: "Error")
 
 // MARK: - App Error Types
 
-/// Errors related to WiFi monitoring
-enum WiFiError: LocalizedError, Equatable {
-    case noInterface
-    case monitoringFailed(underlying: Error?)
-    case ssidUnavailable
-
-    static func == (lhs: WiFiError, rhs: WiFiError) -> Bool {
-        switch (lhs, rhs) {
-        case (.noInterface, .noInterface):
-            return true
-        case (.ssidUnavailable, .ssidUnavailable):
-            return true
-        case (.monitoringFailed, .monitoringFailed):
-            return true
-        default:
-            return false
-        }
-    }
-
-    var errorDescription: String? {
-        switch self {
-        case .noInterface:
-            return "No Wi-Fi interface available"
-        case .monitoringFailed(let error):
-            if let error = error {
-                return "Wi-Fi monitoring failed: \(error.localizedDescription)"
-            }
-            return "Wi-Fi monitoring failed"
-        case .ssidUnavailable:
-            return "Unable to read current network name"
-        }
-    }
-
-    var recoverySuggestion: String? {
-        switch self {
-        case .noInterface:
-            return "Make sure Wi-Fi is enabled on your Mac."
-        case .monitoringFailed:
-            return "Try disabling and re-enabling Wi-Fi triggers."
-        case .ssidUnavailable:
-            return "Grant location permission to access Wi-Fi network information."
-        }
-    }
-}
-
 /// Errors related to mouse jiggler
 enum MouseJigglerError: LocalizedError {
     case noAccessibilityPermission
@@ -78,7 +33,7 @@ enum MouseJigglerError: LocalizedError {
     var recoverySuggestion: String? {
         switch self {
         case .noAccessibilityPermission:
-            return "Open System Settings > Privacy & Security > Accessibility and enable AwakeApp."
+            return "Open System Settings > Privacy & Security > Accessibility and enable No Sleep Pro."
         case .eventCreationFailed, .positionUnavailable:
             return "Try restarting the app."
         }

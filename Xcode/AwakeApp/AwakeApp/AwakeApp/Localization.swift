@@ -69,7 +69,6 @@ enum L10n {
         static let automation = "settings.automation".localized
         static let schedule = "settings.schedule".localized
         static let apps = "settings.apps".localized
-        static let wifi = "settings.wifi".localized
 
         enum Display {
             static let options = "settings.display_options".localized
@@ -140,21 +139,6 @@ enum L10n {
             static let selectTitle = "settings.select_app".localized
             static let selectDescription = "settings.select_app_description".localized
         }
-
-        enum WiFi {
-            static let enable = "settings.enable_wifi_triggers".localized
-            static let addNetwork = "settings.add_network".localized
-            static let addCurrent = "settings.add_current".localized
-            static let none = "settings.no_wifi_triggers".localized
-            static let description = "settings.wifi_triggers_description".localized
-            static func connectedTo(_ ssid: String) -> String {
-                "settings.connected_to".localized(ssid)
-            }
-            static let connected = "wifi.connected".localized
-            static let addTitle = "wifi.add_title".localized
-            static let addDescription = "wifi.add_description".localized
-            static let networkName = "wifi.network_name".localized
-        }
     }
 
     // MARK: - Icon Picker
@@ -171,9 +155,6 @@ enum L10n {
             "auto.app".localized(name)
         }
         static let shortcut = "auto.shortcut".localized
-        static func wifi(_ ssid: String) -> String {
-            "auto.wifi".localized(ssid)
-        }
         static func hardware(_ type: String) -> String {
             "auto.hardware".localized(type)
         }

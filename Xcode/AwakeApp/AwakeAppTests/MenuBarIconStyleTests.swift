@@ -90,14 +90,12 @@ final class MenuBarIconStyleTests: XCTestCase {
     func testFilledDifferentFromRegular() {
         // Most icons should have different filled vs regular names
         // Exception: battery stays the same
-        for style in MenuBarIconStyle.allCases {
-            if style != .battery {
-                XCTAssertNotEqual(
-                    style.systemName,
-                    style.filledSystemName,
-                    "\(style) should have different regular and filled names"
-                )
-            }
+        for style in MenuBarIconStyle.allCases where style != .battery {
+            XCTAssertNotEqual(
+                style.systemName,
+                style.filledSystemName,
+                "\(style) should have different regular and filled names"
+            )
         }
     }
 

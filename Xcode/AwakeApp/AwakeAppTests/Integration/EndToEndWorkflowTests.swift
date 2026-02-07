@@ -8,6 +8,7 @@
 import XCTest
 @testable import AwakeApp
 
+@MainActor
 final class EndToEndWorkflowTests: XCTestCase {
 
     // MARK: - Scenario: Basic Manual Usage
@@ -120,14 +121,8 @@ final class EndToEndWorkflowTests: XCTestCase {
         let currentMinute = 30
 
         // Check schedule
-        var shouldBeActive = false
-        if schedulesEnabled {
-            for schedule in schedules {
-                if isScheduleActive(schedule, weekday: currentWeekday, hour: currentHour, minute: currentMinute) {
-                    shouldBeActive = true
-                    break
-                }
-            }
+        let shouldBeActive = schedulesEnabled && schedules.contains { schedule in
+            isScheduleActive(schedule, weekday: currentWeekday, hour: currentHour, minute: currentMinute)
         }
 
         if shouldBeActive && !mockState.isActive {
@@ -263,67 +258,6 @@ final class EndToEndWorkflowTests: XCTestCase {
         }
 
         XCTAssertFalse(mockState.isActive)
-    }
-
-    // MARK: - Scenario: Wi-Fi Based Home/Office
-
-    func testScenario_WiFiTriggerHomeOffice() {
-        // Setup
-        let mockState = MockAppState()
-        let mockPower = MockPowerManager()
-        let mockWiFi = MockWiFiProvider()
-
-        let wifiTriggersEnabled = true
-        let wifiTriggers = [
-            WiFiTrigger(ssid: "OfficeNetwork", isEnabled: true),
-            WiFiTrigger(ssid: "HomeNetwork", isEnabled: true),
-        ]
-
-        // User arrives at office, connects to OfficeNetwork
-        mockWiFi.connect(to: "OfficeNetwork")
-
-        if wifiTriggersEnabled {
-            if let trigger = wifiTriggers.first(where: {
-                $0.isEnabled && $0.ssid.lowercased() == mockWiFi.currentSSID?.lowercased()
-            }) {
-                mockState.activate(with: .indefinite)
-                mockPower.start(duration: nil, allowDisplaySleep: false, reason: .wifiTrigger(ssid: trigger.ssid))
-            }
-        }
-
-        XCTAssertTrue(mockState.isActive)
-        XCTAssertEqual(mockPower.activationReason, .wifiTrigger(ssid: "OfficeNetwork"))
-
-        // User leaves office
-        mockWiFi.disconnect()
-
-        if wifiTriggersEnabled {
-            let trigger = wifiTriggers.first(where: {
-                $0.isEnabled && $0.ssid.lowercased() == mockWiFi.currentSSID?.lowercased()
-            })
-
-            if trigger == nil, case .wifiTrigger = mockPower.activationReason {
-                mockState.deactivate()
-                mockPower.stop()
-            }
-        }
-
-        XCTAssertFalse(mockState.isActive)
-
-        // User arrives home, connects to HomeNetwork
-        mockWiFi.connect(to: "HomeNetwork")
-
-        if wifiTriggersEnabled {
-            if let trigger = wifiTriggers.first(where: {
-                $0.isEnabled && $0.ssid.lowercased() == mockWiFi.currentSSID?.lowercased()
-            }), !mockState.isActive {
-                mockState.activate(with: .indefinite)
-                mockPower.start(duration: nil, allowDisplaySleep: false, reason: .wifiTrigger(ssid: trigger.ssid))
-            }
-        }
-
-        XCTAssertTrue(mockState.isActive)
-        XCTAssertEqual(mockPower.activationReason, .wifiTrigger(ssid: "HomeNetwork"))
     }
 
     // MARK: - Scenario: Multiple Automation Conflicts

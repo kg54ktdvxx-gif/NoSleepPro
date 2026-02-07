@@ -10,30 +10,6 @@ import XCTest
 
 final class ErrorHandlingIntegrationTests: XCTestCase {
 
-    // MARK: - WiFi Error Tests
-
-    func testWiFiErrorNoInterface() {
-        let error = WiFiError.noInterface
-
-        XCTAssertEqual(error.errorDescription, "No Wi-Fi interface available")
-        XCTAssertNotNil(error.recoverySuggestion)
-        XCTAssertTrue(error.recoverySuggestion?.contains("Wi-Fi") ?? false)
-    }
-
-    func testWiFiErrorMonitoringFailed() {
-        let underlyingError = NSError(domain: "test", code: 1, userInfo: [NSLocalizedDescriptionKey: "Connection timeout"])
-        let error = WiFiError.monitoringFailed(underlying: underlyingError)
-
-        XCTAssertTrue(error.errorDescription?.contains("failed") ?? false)
-        XCTAssertTrue(error.errorDescription?.contains("timeout") ?? false)
-    }
-
-    func testWiFiErrorMonitoringFailedNilUnderlying() {
-        let error = WiFiError.monitoringFailed(underlying: nil)
-
-        XCTAssertEqual(error.errorDescription, "Wi-Fi monitoring failed")
-    }
-
     // MARK: - Mouse Jiggler Error Tests
 
     func testMouseJigglerErrorAccessibility() {
@@ -93,22 +69,6 @@ final class ErrorHandlingIntegrationTests: XCTestCase {
     }
 
     // MARK: - Error Recovery Flow Tests
-
-    func testWiFiErrorRecoveryFlow() {
-        var lastError: WiFiError? = .noInterface
-        var isMonitoring = false
-
-        // Simulate recovery: user enables Wi-Fi
-        let wifiEnabled = true
-
-        if wifiEnabled {
-            lastError = nil
-            isMonitoring = true
-        }
-
-        XCTAssertNil(lastError)
-        XCTAssertTrue(isMonitoring)
-    }
 
     func testMouseJigglerPermissionRecoveryFlow() {
         var lastError: MouseJigglerError? = .noAccessibilityPermission
@@ -190,20 +150,11 @@ final class ErrorHandlingIntegrationTests: XCTestCase {
 
     // MARK: - Error Display Logic Tests
 
-    func testErrorDisplayDecision() {
-        // Non-critical errors should log but not display
-        let nonCriticalErrors: [(error: WiFiError, shouldDisplay: Bool)] = [
-            (.ssidUnavailable, false),
-        ]
-
+    func testCriticalErrorsShouldDisplay() {
         // Critical errors should display to user
         let criticalErrors: [(error: MouseJigglerError, shouldDisplay: Bool)] = [
-            (.noAccessibilityPermission, true),
+            (.noAccessibilityPermission, true)
         ]
-
-        for (_, shouldDisplay) in nonCriticalErrors {
-            XCTAssertFalse(shouldDisplay)
-        }
 
         for (_, shouldDisplay) in criticalErrors {
             XCTAssertTrue(shouldDisplay)
@@ -211,19 +162,6 @@ final class ErrorHandlingIntegrationTests: XCTestCase {
     }
 
     // MARK: - Error State Cleanup Tests
-
-    func testErrorClearedOnSuccessfulOperation() {
-        var lastError: WiFiError? = .noInterface
-
-        // Successful operation
-        let operationSucceeded = true
-
-        if operationSucceeded {
-            lastError = nil
-        }
-
-        XCTAssertNil(lastError)
-    }
 
     func testErrorPersistsUntilResolved() {
         var lastError: MouseJigglerError? = .noAccessibilityPermission

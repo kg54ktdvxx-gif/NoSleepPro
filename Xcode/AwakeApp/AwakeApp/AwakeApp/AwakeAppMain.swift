@@ -9,34 +9,23 @@ import SwiftUI
 
 @main
 struct AwakeAppMain: App {
-    @StateObject private var appState = AppState()
-    @StateObject private var caffeinateManager = CaffeinateManager()
-    @StateObject private var settings = AppSettings.shared
-    @StateObject private var automationManager: AutomationManager
+    /// Centralized dependency container
+    private let container = DependencyContainer.shared
 
     init() {
-        // Initialize automation manager with dependencies
-        let settings = AppSettings.shared
-        let appState = AppState()
-        let caffeinateManager = CaffeinateManager()
-
-        _appState = StateObject(wrappedValue: appState)
-        _caffeinateManager = StateObject(wrappedValue: caffeinateManager)
-        _settings = StateObject(wrappedValue: settings)
-        _automationManager = StateObject(wrappedValue: AutomationManager(
-            settings: settings,
-            appState: appState,
-            caffeinateManager: caffeinateManager
-        ))
+        // Start monitoring services at app launch
+        Task { @MainActor in
+            DependencyContainer.shared.startServices()
+        }
     }
 
     var body: some Scene {
         MenuBarExtra {
             MenuBarView()
-                .environmentObject(appState)
-                .environmentObject(caffeinateManager)
-                .environmentObject(settings)
-                .environmentObject(automationManager)
+                .environmentObject(container.appState)
+                .environmentObject(container.caffeinateManager)
+                .environmentObject(container.settings)
+                .environmentObject(container.automationManager)
         } label: {
             menuBarLabel
         }
@@ -47,15 +36,15 @@ struct AwakeAppMain: App {
     @ViewBuilder
     private var menuBarLabel: some View {
         HStack(spacing: 4) {
-            Image(systemName: appState.isActive
-                ? settings.menuBarIconStyle.filledSystemName
-                : settings.menuBarIconStyle.systemName)
+            Image(systemName: container.appState.isActive
+                ? container.settings.menuBarIconStyle.filledSystemName
+                : container.settings.menuBarIconStyle.systemName)
                 .symbolRenderingMode(.hierarchical)
 
             // Show countdown in menu bar if enabled and timer is active
-            if settings.showMenuBarCountdown,
-               appState.isActive,
-               let remaining = appState.remainingSeconds {
+            if container.settings.showMenuBarCountdown,
+               container.appState.isActive,
+               let remaining = container.appState.remainingSeconds {
                 Text(formatMenuBarTime(remaining))
                     .font(.system(size: 11, weight: .medium, design: .monospaced))
                     .monospacedDigit()

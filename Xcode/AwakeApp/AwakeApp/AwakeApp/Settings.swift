@@ -149,16 +149,6 @@ final class AppSettings: ObservableObject {
     /// Mouse jiggler interval in seconds
     @AppStorage("mouseJigglerInterval") var mouseJigglerInterval: Double = 60
 
-    // MARK: - Wi-Fi Triggers
-
-    /// Wi-Fi networks that trigger activation
-    @Published var wifiTriggers: [WiFiTrigger] = [] {
-        didSet { saveWiFiTriggers() }
-    }
-
-    /// Enable Wi-Fi trigger-based activation
-    @AppStorage("wifiTriggersEnabled") var wifiTriggersEnabled: Bool = false
-
     // MARK: - Menu Bar Appearance
 
     /// Menu bar icon style
@@ -174,7 +164,6 @@ final class AppSettings: ObservableObject {
     private init() {
         loadAppTriggers()
         loadSchedules()
-        loadWiFiTriggers()
     }
 
     // MARK: - Persistence Helpers
@@ -195,7 +184,7 @@ final class AppSettings: ObservableObject {
                 AppTrigger(bundleIdentifier: "us.zoom.xos", appName: "Zoom", isEnabled: true),
                 AppTrigger(bundleIdentifier: "com.microsoft.Powerpoint", appName: "PowerPoint", isEnabled: false),
                 AppTrigger(bundleIdentifier: "com.apple.Keynote", appName: "Keynote", isEnabled: false),
-                AppTrigger(bundleIdentifier: "com.google.Chrome", appName: "Chrome (presenting)", isEnabled: false),
+                AppTrigger(bundleIdentifier: "com.google.Chrome", appName: "Chrome (presenting)", isEnabled: false)
             ]
         }
     }
@@ -210,19 +199,6 @@ final class AppSettings: ObservableObject {
         if let data = UserDefaults.standard.data(forKey: "schedules"),
            let decoded = try? JSONDecoder().decode([ScheduleEntry].self, from: data) {
             schedules = decoded
-        }
-    }
-
-    private func saveWiFiTriggers() {
-        if let encoded = try? JSONEncoder().encode(wifiTriggers) {
-            UserDefaults.standard.set(encoded, forKey: "wifiTriggers")
-        }
-    }
-
-    private func loadWiFiTriggers() {
-        if let data = UserDefaults.standard.data(forKey: "wifiTriggers"),
-           let decoded = try? JSONDecoder().decode([WiFiTrigger].self, from: data) {
-            wifiTriggers = decoded
         }
     }
 
@@ -241,7 +217,7 @@ final class AppSettings: ObservableObject {
         ("com.adobe.PremierePro", "Premiere Pro"),
         ("com.apple.Logic10", "Logic Pro"),
         ("com.vmware.fusion", "VMware Fusion"),
-        ("com.parallels.desktop", "Parallels Desktop"),
+        ("com.parallels.desktop", "Parallels Desktop")
     ]
 }
 

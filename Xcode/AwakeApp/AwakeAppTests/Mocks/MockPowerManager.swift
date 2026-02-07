@@ -8,19 +8,10 @@
 import Foundation
 @testable import AwakeApp
 
-// MARK: - Power Manager Protocol
-
-/// Protocol for power management operations (enables testing)
-protocol PowerManaging {
-    func start(duration: Int?, allowDisplaySleep: Bool, reason: ActivationReason)
-    func stop()
-    var isRunning: Bool { get }
-    var activationReason: ActivationReason? { get }
-}
-
 // MARK: - Mock Power Manager
 
 /// Mock implementation for unit testing
+/// Conforms to PowerManaging protocol defined in production code
 class MockPowerManager: PowerManaging {
     var isRunning: Bool = false
     var activationReason: ActivationReason?
@@ -84,34 +75,11 @@ class MockBatteryProvider: BatteryProviding {
     }
 }
 
-// MARK: - Mock WiFi Provider
-
-/// Protocol for WiFi information
-protocol WiFiProviding {
-    var currentSSID: String? { get }
-    var isConnected: Bool { get }
-}
-
-/// Mock WiFi provider for testing
-class MockWiFiProvider: WiFiProviding {
-    var currentSSID: String?
-    var isConnected: Bool = false
-
-    func connect(to ssid: String) {
-        currentSSID = ssid
-        isConnected = true
-    }
-
-    func disconnect() {
-        currentSSID = nil
-        isConnected = false
-    }
-}
-
 // MARK: - Mock App State
 
 /// Mock app state for testing
-class MockAppState {
+/// Conforms to AppStateManaging protocol defined in production code
+class MockAppState: AppStateManaging {
     var isActive: Bool = false
     var currentPreset: TimerPreset?
     var remainingSeconds: Int?

@@ -2,7 +2,7 @@
 //  MenuBarView.swift
 //  AwakeApp
 //
-//  Menu bar dropdown UI with modern, polished design
+//  Menu bar dropdown UI with Liquid Glass design
 //
 
 import SwiftUI
@@ -22,19 +22,28 @@ struct MenuBarView: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
-            // Header with app name and toggle switch
+            // Header with app name and toggle switch - Liquid Glass style
             HStack(spacing: 12) {
                 VStack(alignment: .leading, spacing: 2) {
-                    Text("AwakeApp")
-                        .font(.system(size: 18, weight: .bold))
-                        .foregroundColor(.primary)
+                    HStack(spacing: 8) {
+                        Text("No Sleep Pro")
+                            .font(.system(size: 18, weight: .bold, design: .rounded))
+                            .foregroundColor(.primary)
+
+                        if appState.isActive {
+                            Image(systemName: "bolt.fill")
+                                .font(.system(size: 12, weight: .semibold))
+                                .foregroundColor(.awakeGreen)
+                                .symbolEffect(.pulse)
+                        }
+                    }
 
                     statusSubtitle
                 }
 
                 Spacer()
 
-                // Custom styled power button
+                // Premium gradient power button with glow
                 Button(action: {
                     if appState.isActive {
                         deactivate()
@@ -48,38 +57,21 @@ struct MenuBarView: View {
                         Text(appState.isActive ? "ON" : "OFF")
                             .font(.system(size: 13, weight: .bold))
                     }
-                    .foregroundColor(.white)
-                    .padding(.horizontal, 14)
-                    .padding(.vertical, 8)
-                    .background(
-                        RoundedRectangle(cornerRadius: 8)
-                            .fill(appState.isActive
-                                ? LinearGradient(colors: [Color.green, Color.green.opacity(0.8)], startPoint: .top, endPoint: .bottom)
-                                : LinearGradient(colors: [Color.gray.opacity(0.6), Color.gray.opacity(0.4)], startPoint: .top, endPoint: .bottom))
-                    )
-                    .shadow(color: appState.isActive ? Color.green.opacity(0.4) : Color.clear, radius: 4, x: 0, y: 2)
                 }
-                .buttonStyle(.plain)
+                .buttonStyle(PowerToggleButtonStyle(isActive: appState.isActive))
+                .accessibilityLabel(appState.isActive ? "Stop sleep prevention" : "Start sleep prevention")
+                .accessibilityHint("Double tap to toggle")
             }
             .padding(.horizontal, 20)
             .padding(.vertical, 16)
-            .background(
-                LinearGradient(
-                    colors: [
-                        Color(nsColor: .controlBackgroundColor).opacity(0.6),
-                        Color(nsColor: .controlBackgroundColor).opacity(0.3)
-                    ],
-                    startPoint: .topLeading,
-                    endPoint: .bottomTrailing
-                )
-            )
+            .liquidGlass(cornerRadius: 0, depth: .surface)
 
             // Error display
             if let error = caffeinateManager.lastError {
                 HStack(spacing: 10) {
                     Image(systemName: "exclamationmark.triangle.fill")
                         .font(.system(size: 16, weight: .medium))
-                        .foregroundColor(.orange)
+                        .foregroundColor(.awakeOrange)
 
                     Text(error.localizedDescription)
                         .font(.system(size: 13))
@@ -90,7 +82,7 @@ struct MenuBarView: View {
                 }
                 .padding(.horizontal, 20)
                 .padding(.vertical, 12)
-                .background(Color.orange.opacity(0.1))
+                .background(Color.awakeOrange.opacity(0.1))
             }
 
             // Battery warning
@@ -99,16 +91,23 @@ struct MenuBarView: View {
                     Image(systemName: "battery.25")
                         .font(.system(size: 16, weight: .medium))
                         .foregroundColor(.red)
+                        .symbolEffect(.pulse)
 
-                    Text("Stopped to preserve battery")
-                        .font(.system(size: 13))
-                        .foregroundColor(.primary)
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text("Stopped to preserve battery")
+                            .font(.system(size: 13, weight: .medium))
+                            .foregroundColor(.primary)
+
+                        Text("Plug in to continue")
+                            .font(.system(size: 11))
+                            .foregroundColor(.secondary)
+                    }
 
                     Spacer()
                 }
                 .padding(.horizontal, 20)
                 .padding(.vertical, 12)
-                .background(Color.red.opacity(0.1))
+                .background(Color.red.opacity(0.08))
             }
 
             // Automation status display
@@ -116,93 +115,118 @@ struct MenuBarView: View {
                 HStack(spacing: 10) {
                     Image(systemName: automationIcon(for: reason))
                         .font(.system(size: 16, weight: .medium))
-                        .foregroundColor(.purple)
+                        .foregroundColor(.awakePurple)
+                        .symbolEffect(.pulse)
 
                     Text(automationText(for: reason))
-                        .font(.system(size: 13))
+                        .font(.system(size: 13, weight: .medium))
                         .foregroundColor(.primary)
 
                     Spacer()
 
                     Text("Auto")
-                        .font(.system(size: 11, weight: .medium))
-                        .foregroundColor(.purple)
-                        .padding(.horizontal, 8)
-                        .padding(.vertical, 3)
-                        .background(Color.purple.opacity(0.15))
-                        .cornerRadius(6)
+                        .font(.system(size: 11, weight: .semibold))
+                        .foregroundColor(.awakePurple)
+                        .padding(.horizontal, 10)
+                        .padding(.vertical, 4)
+                        .background(
+                            Capsule()
+                                .fill(Color.awakePurple.opacity(0.15))
+                        )
                 }
                 .padding(.horizontal, 20)
                 .padding(.vertical, 12)
-                .background(Color.purple.opacity(0.08))
+                .background(Color.awakePurple.opacity(0.06))
             }
 
-            // Timer display when active
-            if appState.isActive, let remaining = appState.remainingSeconds {
-                HStack(spacing: 10) {
-                    Image(systemName: "timer")
-                        .font(.system(size: 16, weight: .medium))
-                        .foregroundColor(.blue)
+            // Timer display when active - using CircularTimerView
+            if appState.isActive, let remaining = appState.remainingSeconds,
+               let totalSeconds = appState.currentPreset?.seconds {
+                HStack(spacing: 16) {
+                    CompactCircularTimerView(
+                        remainingSeconds: remaining,
+                        totalSeconds: totalSeconds,
+                        size: 56
+                    )
 
-                    Text(formatTime(remaining))
-                        .font(.system(size: 15, weight: .semibold, design: .monospaced))
-                        .foregroundColor(.primary)
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text(formatTime(remaining))
+                            .font(.system(size: 18, weight: .bold, design: .rounded))
+                            .monospacedDigit()
+                            .foregroundColor(.primary)
+
+                        Text("remaining")
+                            .font(.system(size: 12, weight: .medium))
+                            .foregroundColor(.secondary)
+                    }
 
                     Spacer()
-
-                    Text("remaining")
-                        .font(.system(size: 13))
-                        .foregroundColor(.secondary)
                 }
                 .padding(.horizontal, 20)
-                .padding(.vertical, 12)
-                .background(Color.blue.opacity(0.08))
+                .padding(.vertical, 14)
+                .background(Color.awakeBlue.opacity(0.08))
             } else if appState.isActive {
-                // Indefinite mode indicator
-                HStack(spacing: 10) {
-                    Image(systemName: "infinity")
-                        .font(.system(size: 16, weight: .medium))
-                        .foregroundColor(.blue)
+                // Indefinite mode indicator with animation
+                HStack(spacing: 14) {
+                    ZStack {
+                        Circle()
+                            .fill(Color.awakeBlue.opacity(0.15))
+                            .frame(width: 40, height: 40)
 
-                    Text("Running indefinitely")
-                        .font(.system(size: 13))
-                        .foregroundColor(.primary)
+                        Image(systemName: "infinity")
+                            .font(.system(size: 20, weight: .semibold))
+                            .foregroundColor(.awakeBlue)
+                            .symbolEffect(.pulse)
+                    }
+
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text("Running indefinitely")
+                            .font(.system(size: 14, weight: .semibold))
+                            .foregroundColor(.primary)
+
+                        Text("No time limit set")
+                            .font(.system(size: 12))
+                            .foregroundColor(.secondary)
+                    }
 
                     Spacer()
                 }
                 .padding(.horizontal, 20)
-                .padding(.vertical, 12)
-                .background(Color.blue.opacity(0.08))
+                .padding(.vertical, 14)
+                .background(Color.awakeBlue.opacity(0.08))
             }
 
             Divider()
                 .padding(.vertical, 4)
 
             // Duration section
-            VStack(alignment: .leading, spacing: 16) {
-                Button(action: {
-                    withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
+            VStack(alignment: .leading, spacing: 12) {
+                HStack {
+                    Image(systemName: "clock")
+                        .font(.system(size: 16, weight: .medium))
+                        .foregroundColor(.awakeBlue)
+                        .frame(width: 24)
+
+                    Text("Duration")
+                        .font(.system(size: 16, weight: .semibold))
+                        .foregroundColor(.primary)
+
+                    Spacer()
+
+                    Image(systemName: showDurationPicker ? "chevron.down" : "chevron.right")
+                        .font(.system(size: 13, weight: .bold))
+                        .foregroundColor(.secondary)
+                        .animation(.easeInOut(duration: 0.15), value: showDurationPicker)
+                }
+                .padding(.horizontal, 20)
+                .padding(.vertical, 12)
+                .frame(maxWidth: .infinity)
+                .contentShape(Rectangle())
+                .onTapGesture {
+                    withAnimation(.easeInOut(duration: 0.2)) {
                         showDurationPicker.toggle()
                     }
-                }) {
-                    HStack {
-                        Image(systemName: "clock")
-                            .font(.system(size: 16, weight: .medium))
-                            .foregroundColor(.blue)
-                            .frame(width: 24)
-
-                        Text("Duration")
-                            .font(.system(size: 16, weight: .semibold))
-                            .foregroundColor(.primary)
-
-                        Spacer()
-
-                        Image(systemName: showDurationPicker ? "chevron.down" : "chevron.right")
-                            .font(.system(size: 13, weight: .bold))
-                            .foregroundColor(.secondary)
-                    }
                 }
-                .buttonStyle(.plain)
 
                 if showDurationPicker {
                     VStack(spacing: 12) {
@@ -242,13 +266,17 @@ struct MenuBarView: View {
                             )
                         }
 
-                        // Custom duration button
+                        // Custom duration toggle
                         Button(action: {
-                            customMinutes = String(settings.lastCustomDurationMinutes)
-                            showCustomDuration = true
+                            withAnimation(.easeInOut(duration: 0.2)) {
+                                if !showCustomDuration {
+                                    customMinutes = String(settings.lastCustomDurationMinutes)
+                                }
+                                showCustomDuration.toggle()
+                            }
                         }) {
                             HStack {
-                                Image(systemName: "slider.horizontal.3")
+                                Image(systemName: showCustomDuration ? "chevron.down" : "slider.horizontal.3")
                                     .font(.system(size: 14, weight: .medium))
                                 Text("Custom duration...")
                                     .font(.system(size: 13, weight: .medium))
@@ -257,17 +285,64 @@ struct MenuBarView: View {
                             .padding(.vertical, 8)
                         }
                         .buttonStyle(.plain)
+
+                        // Inline custom duration picker
+                        if showCustomDuration {
+                            VStack(spacing: 12) {
+                                HStack {
+                                    TextField("Minutes", text: $customMinutes)
+                                        .textFieldStyle(.roundedBorder)
+                                        .frame(width: 80)
+                                        .onSubmit {
+                                            if let minutes = Int(customMinutes), minutes > 0, minutes <= 1440 {
+                                                settings.lastCustomDurationMinutes = minutes
+                                                activate(with: .custom(minutes: minutes))
+                                                showCustomDuration = false
+                                            }
+                                        }
+
+                                    Text("minutes")
+                                        .font(.system(size: 13))
+                                        .foregroundColor(.secondary)
+
+                                    Spacer()
+
+                                    Button("Start") {
+                                        if let minutes = Int(customMinutes), minutes > 0, minutes <= 1440 {
+                                            settings.lastCustomDurationMinutes = minutes
+                                            activate(with: .custom(minutes: minutes))
+                                            showCustomDuration = false
+                                        }
+                                    }
+                                    .buttonStyle(.borderedProminent)
+                                    .controlSize(.small)
+                                    .disabled((Int(customMinutes) ?? 0) <= 0 || (Int(customMinutes) ?? 0) > 1440)
+                                }
+
+                                // Quick presets
+                                HStack(spacing: 8) {
+                                    ForEach([("45m", 45), ("90m", 90), ("3h", 180), ("8h", 480)], id: \.1) { label, value in
+                                        Button(label) {
+                                            customMinutes = String(value)
+                                        }
+                                        .buttonStyle(.bordered)
+                                        .controlSize(.small)
+                                    }
+                                }
+                            }
+                            .padding(12)
+                            .background(
+                                RoundedRectangle(cornerRadius: 8)
+                                    .fill(Color(nsColor: .controlBackgroundColor))
+                            )
+                            .transition(.opacity.combined(with: .move(edge: .top)))
+                        }
                     }
-                    .transition(
-                        .asymmetric(
-                            insertion: .opacity.combined(with: .scale(scale: 0.95)).combined(with: .move(edge: .top)),
-                            removal: .opacity.combined(with: .scale(scale: 0.95))
-                        )
-                    )
+                    .padding(.horizontal, 20)
+                    .transition(.move(edge: .top).combined(with: .opacity))
                 }
             }
-            .padding(.horizontal, 20)
-            .padding(.vertical, 16)
+            .padding(.bottom, 12)
 
             Divider()
                 .padding(.vertical, 4)
@@ -293,13 +368,19 @@ struct MenuBarView: View {
                 .padding(.vertical, 12)
                 .background(Color.red.opacity(0.05))
                 .contentShape(Rectangle())
+                .accessibilityLabel("Stop timer")
+                .accessibilityHint("Double tap to stop keeping your Mac awake")
 
                 Divider()
                     .padding(.vertical, 4)
             }
 
             // Settings button
-            Button(action: { WindowManager.shared.openSettings() }) {
+            Button(action: {
+                Task { @MainActor in
+                    WindowManager.shared.openSettings()
+                }
+            }) {
                 HStack(spacing: 10) {
                     Image(systemName: "gear")
                         .font(.system(size: 16, weight: .medium))
@@ -328,9 +409,15 @@ struct MenuBarView: View {
                 }
             }
             .keyboardShortcut(",", modifiers: .command)
+            .accessibilityLabel("Settings")
+            .accessibilityHint("Open No Sleep Pro settings. Command comma.")
 
             // About button
-            Button(action: { WindowManager.shared.openAbout() }) {
+            Button(action: {
+                Task { @MainActor in
+                    WindowManager.shared.openAbout()
+                }
+            }) {
                 HStack(spacing: 10) {
                     Image(systemName: "info.circle")
                         .font(.system(size: 16, weight: .medium))
@@ -354,6 +441,7 @@ struct MenuBarView: View {
                     aboutButtonHovered = isHovering
                 }
             }
+            .accessibilityLabel("About No Sleep Pro")
 
             Divider()
                 .padding(.vertical, 4)
@@ -366,7 +454,7 @@ struct MenuBarView: View {
                         .foregroundColor(.secondary)
                         .frame(width: 24)
 
-                    Text("Quit AwakeApp")
+                    Text("Quit No Sleep Pro")
                         .font(.system(size: 15))
                         .foregroundColor(.primary)
 
@@ -388,21 +476,12 @@ struct MenuBarView: View {
                 }
             }
             .keyboardShortcut("q")
+            .accessibilityLabel("Quit No Sleep Pro")
+            .accessibilityHint("Command Q")
         }
         .frame(width: 340)
         .background(Color(nsColor: .windowBackgroundColor))
-        .sheet(isPresented: $showCustomDuration) {
-            CustomDurationSheet(
-                customMinutes: $customMinutes,
-                onActivate: { minutes in
-                    settings.lastCustomDurationMinutes = minutes
-                    activate(with: .custom(minutes: minutes))
-                }
-            )
-        }
-        .onAppear {
-            automationManager.startMonitoring()
-        }
+        // Note: Monitoring now starts from DependencyContainer at app launch
     }
 
     // MARK: - Subviews
@@ -412,27 +491,24 @@ struct MenuBarView: View {
         if appState.isActive {
             HStack(spacing: 6) {
                 Circle()
-                    .fill(Color.green)
+                    .fill(Color.awakeGreen)
                     .frame(width: 8, height: 8)
-                    .overlay(
-                        Circle()
-                            .stroke(Color.green.opacity(0.5), lineWidth: 2)
-                            .scaleEffect(1.5)
-                            .opacity(0)
-                            .animation(
-                                Animation.easeInOut(duration: 1.5)
-                                    .repeatForever(autoreverses: false),
-                                value: appState.isActive
-                            )
-                    )
+                    .statusGlow(color: .awakeGreen, isActive: true)
+
                 Text("Active")
+                    .font(.system(size: 12, weight: .medium))
+                    .foregroundColor(.awakeGreen)
+            }
+        } else {
+            HStack(spacing: 6) {
+                Circle()
+                    .fill(Color.secondary.opacity(0.5))
+                    .frame(width: 8, height: 8)
+
+                Text("Inactive")
                     .font(.system(size: 12, weight: .medium))
                     .foregroundColor(.secondary)
             }
-        } else {
-            Text("Inactive")
-                .font(.system(size: 12, weight: .medium))
-                .foregroundColor(.secondary)
         }
     }
 
@@ -472,7 +548,6 @@ struct MenuBarView: View {
         case .schedule: return "calendar"
         case .appTrigger: return "app.badge"
         case .keyboardShortcut: return "keyboard"
-        case .wifiTrigger: return "wifi"
         case .hardwareTrigger: return "cable.connector"
         }
     }
@@ -483,124 +558,8 @@ struct MenuBarView: View {
         case .schedule: return "Activated by schedule"
         case .appTrigger(let appName): return "Triggered by \(appName)"
         case .keyboardShortcut: return "Activated via shortcut"
-        case .wifiTrigger(let ssid): return "Connected to \(ssid)"
         case .hardwareTrigger(let type): return "\(type) detected"
         }
-    }
-}
-
-// MARK: - Custom Duration Sheet
-
-struct CustomDurationSheet: View {
-    @Binding var customMinutes: String
-    let onActivate: (Int) -> Void
-    @Environment(\.dismiss) var dismiss
-    @FocusState private var isFocused: Bool
-
-    var parsedMinutes: Int? {
-        Int(customMinutes)
-    }
-
-    var isValid: Bool {
-        guard let minutes = parsedMinutes else { return false }
-        return minutes > 0 && minutes <= 1440 // Max 24 hours
-    }
-
-    var body: some View {
-        VStack(spacing: 20) {
-            Text("Custom Duration")
-                .font(.headline)
-
-            VStack(alignment: .leading, spacing: 8) {
-                HStack {
-                    TextField("Minutes", text: $customMinutes)
-                        .textFieldStyle(.roundedBorder)
-                        .frame(width: 100)
-                        .focused($isFocused)
-                        .onSubmit {
-                            if isValid, let minutes = parsedMinutes {
-                                onActivate(minutes)
-                                dismiss()
-                            }
-                        }
-
-                    Text("minutes")
-                        .foregroundColor(.secondary)
-                }
-
-                if let minutes = parsedMinutes, isValid {
-                    Text(formatDuration(minutes))
-                        .font(.caption)
-                        .foregroundColor(.secondary)
-                } else if !customMinutes.isEmpty {
-                    Text("Enter 1-1440 minutes")
-                        .font(.caption)
-                        .foregroundColor(.red)
-                }
-            }
-
-            // Quick presets
-            HStack(spacing: 12) {
-                QuickPresetButton(label: "45m", action: { customMinutes = "45" })
-                QuickPresetButton(label: "90m", action: { customMinutes = "90" })
-                QuickPresetButton(label: "3h", action: { customMinutes = "180" })
-                QuickPresetButton(label: "8h", action: { customMinutes = "480" })
-            }
-
-            Spacer()
-
-            HStack {
-                Button("Cancel") {
-                    dismiss()
-                }
-                .keyboardShortcut(.cancelAction)
-
-                Spacer()
-
-                Button("Start") {
-                    if let minutes = parsedMinutes {
-                        onActivate(minutes)
-                        dismiss()
-                    }
-                }
-                .keyboardShortcut(.defaultAction)
-                .disabled(!isValid)
-            }
-        }
-        .padding()
-        .frame(width: 280, height: 220)
-        .onAppear {
-            isFocused = true
-        }
-    }
-
-    private func formatDuration(_ minutes: Int) -> String {
-        let hours = minutes / 60
-        let mins = minutes % 60
-        if hours > 0 && mins > 0 {
-            return "\(hours)h \(mins)m"
-        } else if hours > 0 {
-            return "\(hours) hour\(hours == 1 ? "" : "s")"
-        } else {
-            return "\(mins) minute\(mins == 1 ? "" : "s")"
-        }
-    }
-}
-
-struct QuickPresetButton: View {
-    let label: String
-    let action: () -> Void
-
-    var body: some View {
-        Button(action: action) {
-            Text(label)
-                .font(.system(size: 12, weight: .medium))
-                .padding(.horizontal, 12)
-                .padding(.vertical, 6)
-                .background(Color.gray.opacity(0.15))
-                .cornerRadius(6)
-        }
-        .buttonStyle(.plain)
     }
 }
 
@@ -611,9 +570,6 @@ struct DurationButton: View {
     let isSelected: Bool
     let action: () -> Void
 
-    @State private var isHovering = false
-    @State private var isPressed = false
-
     var body: some View {
         Button(action: {
             withAnimation(.spring(response: 0.3, dampingFraction: 0.6)) {
@@ -623,32 +579,38 @@ struct DurationButton: View {
             VStack(spacing: 6) {
                 if preset == .indefinite {
                     Image(systemName: "infinity")
-                        .font(.system(size: 22, weight: .semibold))
+                        .font(.system(size: 24, weight: .semibold))
+                        .symbolEffect(.pulse, options: .repeating, isActive: isSelected)
                 } else {
                     Text(shortLabel)
-                        .font(.system(size: 22, weight: .bold))
+                        .font(.system(size: 24, weight: .bold, design: .rounded))
                 }
 
                 Text(subLabel)
                     .font(.system(size: 11, weight: .medium))
                     .foregroundColor(isSelected ? .white.opacity(0.9) : .secondary)
             }
-            .frame(maxWidth: .infinity)
-            .frame(height: 72)
-            .background(backgroundGradient)
-            .overlay(
-                RoundedRectangle(cornerRadius: 14)
-                    .strokeBorder(borderColor, lineWidth: isSelected ? 2.5 : 1.5)
-            )
-            .foregroundColor(isSelected ? .white : .primary)
-            .shadow(color: isSelected ? Color.blue.opacity(0.3) : Color.clear, radius: 8, x: 0, y: 4)
-            .scaleEffect(isPressed ? 0.96 : (isHovering ? 1.02 : 1.0))
-            .brightness(isHovering && !isSelected ? 0.05 : 0)
         }
-        .buttonStyle(PressableButtonStyle(isPressed: $isPressed))
-        .onHover { hovering in
-            withAnimation(.easeInOut(duration: 0.15)) {
-                isHovering = hovering
+        .buttonStyle(EnhancedDurationButtonStyle(isSelected: isSelected, accentColor: .awakeBlue))
+        .accessibilityLabel(accessibilityLabel)
+        .accessibilityHint(isSelected ? "Currently selected" : "Double tap to select")
+        .accessibilityAddTraits(isSelected ? .isSelected : [])
+    }
+
+    private var accessibilityLabel: String {
+        switch preset {
+        case .fifteenMinutes: return "15 minutes"
+        case .thirtyMinutes: return "30 minutes"
+        case .oneHour: return "1 hour"
+        case .twoHours: return "2 hours"
+        case .fiveHours: return "5 hours"
+        case .indefinite: return "Indefinite, no time limit"
+        case .custom(let minutes):
+            if minutes >= 60 {
+                let hours = minutes / 60
+                return "\(hours) \(hours == 1 ? "hour" : "hours")"
+            } else {
+                return "\(minutes) minutes"
             }
         }
     }
@@ -678,40 +640,6 @@ struct DurationButton: View {
         case .custom(let minutes):
             return minutes >= 60 ? "hours" : "minutes"
         }
-    }
-
-    private var backgroundGradient: some View {
-        RoundedRectangle(cornerRadius: 14)
-            .fill(
-                isSelected
-                    ? LinearGradient(colors: [Color.blue, Color.blue.opacity(0.8)], startPoint: .top, endPoint: .bottom)
-                    : LinearGradient(colors: [Color(nsColor: .controlBackgroundColor), Color(nsColor: .controlBackgroundColor)], startPoint: .top, endPoint: .bottom)
-            )
-    }
-
-    private var borderColor: Color {
-        if isSelected {
-            return Color.blue.opacity(0.5)
-        } else if isHovering {
-            return Color.gray.opacity(0.4)
-        } else {
-            return Color.gray.opacity(0.2)
-        }
-    }
-}
-
-// MARK: - Button Style
-
-struct PressableButtonStyle: ButtonStyle {
-    @Binding var isPressed: Bool
-
-    func makeBody(configuration: Configuration) -> some View {
-        configuration.label
-            .onChange(of: configuration.isPressed) { oldValue, newValue in
-                withAnimation(.easeInOut(duration: 0.1)) {
-                    isPressed = newValue
-                }
-            }
     }
 }
 

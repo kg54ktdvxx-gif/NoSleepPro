@@ -89,3 +89,7 @@ final class AppState: ObservableObject {
         }
     }
 }
+
+// MARK: - Protocol Conformance
+
+extension AppState: AppStateManaging {}

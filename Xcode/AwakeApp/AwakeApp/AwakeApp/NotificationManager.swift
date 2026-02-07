@@ -42,7 +42,7 @@ class NotificationManager: ObservableObject {
         guard hasPermission else { return }
 
         let content = UNMutableNotificationContent()
-        content.title = "AwakeApp"
+        content.title = "No Sleep Pro"
         content.body = "Timer ended (\(presetName)). Your Mac can now sleep normally."
         content.sound = .default
 

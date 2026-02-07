@@ -36,7 +36,6 @@ enum ActivationReason: Equatable {
     case schedule
     case appTrigger(appName: String)
     case keyboardShortcut
-    case wifiTrigger(ssid: String)
     case hardwareTrigger(type: String)
 
     var description: String {
@@ -45,7 +44,6 @@ enum ActivationReason: Equatable {
         case .schedule: return "Schedule"
         case .appTrigger(let appName): return "App: \(appName)"
         case .keyboardShortcut: return "Shortcut"
-        case .wifiTrigger(let ssid): return "Wi-Fi: \(ssid)"
         case .hardwareTrigger(let type): return "Hardware: \(type)"
         }
     }
@@ -84,7 +82,7 @@ final class CaffeinateManager: ObservableObject {
 
         // Create power assertion
         var assertionID: IOPMAssertionID = 0
-        let assertionName = "AwakeApp preventing sleep" as CFString
+        let assertionName = "No Sleep Pro preventing sleep" as CFString
 
         // Choose assertion type based on display sleep preference
         let assertionType = allowDisplaySleep
@@ -160,7 +158,9 @@ final class CaffeinateManager: ObservableObject {
         let sources = IOPSCopyPowerSourcesList(snapshot).takeRetainedValue() as Array
 
         for source in sources {
-            let description = IOPSGetPowerSourceDescription(snapshot, source).takeUnretainedValue() as! [String: Any]
+            guard let description = IOPSGetPowerSourceDescription(snapshot, source)?.takeUnretainedValue() as? [String: Any] else {
+                continue
+            }
 
             if let type = description[kIOPSTypeKey] as? String,
                type == kIOPSInternalBatteryType {
@@ -196,3 +196,7 @@ final class CaffeinateManager: ObservableObject {
         durationTimer?.invalidate()
     }
 }
+
+// MARK: - Protocol Conformance
+
+extension CaffeinateManager: PowerManaging {}

@@ -200,7 +200,7 @@ final class ScheduleLogicTests: XCTestCase {
     func testAnyMatchingScheduleActivates() {
         let schedules = [
             createSchedule(days: [.monday], startHour: 9, startMinute: 0, endHour: 12, endMinute: 0),
-            createSchedule(days: [.monday], startHour: 13, startMinute: 0, endHour: 17, endMinute: 0),
+            createSchedule(days: [.monday], startHour: 13, startMinute: 0, endHour: 17, endMinute: 0)
         ]
 
         // Morning slot

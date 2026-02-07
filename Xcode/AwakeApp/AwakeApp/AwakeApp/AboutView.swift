@@ -2,144 +2,261 @@
 //  AboutView.swift
 //  AwakeApp
 //
-//  Modern, professional about window for AwakeApp
+//  Clean, minimal About window with 3 tabs
 //
 
 import SwiftUI
 
 struct AboutView: View {
+    @State private var selectedTab = 0
+
     var body: some View {
-        ZStack {
-            // Gradient background
-            LinearGradient(
-                colors: [
-                    Color(red: 0.95, green: 0.88, blue: 0.76).opacity(0.3),
-                    Color(red: 0.85, green: 0.75, blue: 0.65).opacity(0.2),
-                    Color(nsColor: .windowBackgroundColor)
-                ],
-                startPoint: .topLeading,
-                endPoint: .bottomTrailing
-            )
-            .ignoresSafeArea()
-
-            VStack(spacing: 0) {
-                // Header section
-                VStack(spacing: 16) {
-                    Spacer()
-                        .frame(height: 40)
-
-                    // App name with gradient text
-                    Text("AwakeApp")
-                        .font(.system(size: 36, weight: .bold, design: .rounded))
-                        .foregroundStyle(
-                            LinearGradient(
-                                colors: [Color.primary, Color.primary.opacity(0.7)],
-                                startPoint: .leading,
-                                endPoint: .trailing
-                            )
-                        )
-
-                    Text("Version 1.2")
-                        .font(.system(size: 14, weight: .medium))
-                        .foregroundColor(.secondary)
-                        .padding(.top, -12)
-
-                    Spacer()
-                        .frame(height: 20)
+        VStack(spacing: 0) {
+            // Header with app icon and name
+            VStack(spacing: 12) {
+                // App icon from bundle
+                if let appIcon = NSApp.applicationIconImage {
+                    Image(nsImage: appIcon)
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .frame(width: 96, height: 96)
                 }
 
-                // Feature highlights
-                VStack(spacing: 16) {
-                    FeatureRow(icon: "cup.and.saucer.fill", title: "Prevents Sleep", description: "Keep your Mac awake and productive")
-                    FeatureRow(icon: "keyboard", title: "Keyboard Shortcut", description: "Toggle with ⌘⇧A anywhere")
-                    FeatureRow(icon: "app.badge", title: "App Triggers", description: "Auto-activate for Zoom, PowerPoint, etc.")
-                    FeatureRow(icon: "calendar", title: "Schedules", description: "Stay awake during work hours")
-                    FeatureRow(icon: "battery.50", title: "Battery Protection", description: "Auto-stop when battery is low")
-                }
-                .padding(.horizontal, 30)
-                .padding(.vertical, 20)
-                .background(
-                    RoundedRectangle(cornerRadius: 16)
-                        .fill(Color(nsColor: .controlBackgroundColor).opacity(0.5))
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 16)
-                                .strokeBorder(Color.gray.opacity(0.2), lineWidth: 1)
-                        )
-                )
-                .padding(.horizontal, 24)
+                Text("No Sleep Pro")
+                    .font(.system(size: 24, weight: .bold, design: .rounded))
+                    .foregroundColor(.primary)
 
-                Spacer()
-                    .frame(height: 24)
+                Text("Version \(Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0")")
+                    .font(.system(size: 12))
+                    .foregroundColor(.secondary)
 
-                Spacer()
+                Text("Keep your Mac awake, effortlessly")
+                    .font(.system(size: 12))
+                    .foregroundColor(.secondary)
+            }
+            .padding(.top, 24)
+            .padding(.bottom, 16)
 
-                // Footer with credits and close button
-                VStack(spacing: 16) {
-                    Divider()
-                        .padding(.horizontal, 40)
+            // Tab picker
+            Picker("", selection: $selectedTab) {
+                Text("About").tag(0)
+                Text("Why No Sleep Pro").tag(1)
+                Text("Tips & Tricks").tag(2)
+            }
+            .pickerStyle(.segmented)
+            .padding(.horizontal, 20)
+            .padding(.bottom, 12)
 
-                    Text("Built with  ❤️  &  🤖  in  🇸🇬")
-                        .font(.system(size: 13))
-                        .foregroundColor(.secondary)
-
-                    Button(action: {
-                        NSApp.keyWindow?.close()
-                    }) {
-                        Text("Close")
-                            .font(.system(size: 14, weight: .semibold))
-                            .foregroundColor(.white)
-                            .frame(width: 120, height: 36)
-                            .background(
-                                LinearGradient(
-                                    colors: [Color.blue, Color.blue.opacity(0.8)],
-                                    startPoint: .top,
-                                    endPoint: .bottom
-                                )
-                            )
-                            .cornerRadius(8)
-                            .shadow(color: Color.blue.opacity(0.3), radius: 8, x: 0, y: 4)
-                    }
-                    .buttonStyle(.plain)
-                    .keyboardShortcut(.defaultAction)
-
-                    Spacer()
-                        .frame(height: 20)
+            // Tab content
+            Group {
+                switch selectedTab {
+                case 0:
+                    AboutTabContent()
+                case 1:
+                    WhyAwakeAppTabContent()
+                case 2:
+                    TipsAndTricksTabContent()
+                default:
+                    AboutTabContent()
                 }
             }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+
+            // Footer
+            VStack(spacing: 10) {
+                Divider()
+
+                Text("Made in Singapore")
+                    .font(.system(size: 11))
+                    .foregroundColor(.secondary)
+
+                Button("Close") {
+                    NSApp.keyWindow?.close()
+                }
+                .keyboardShortcut(.defaultAction)
+            }
+            .padding(.horizontal, 20)
+            .padding(.bottom, 14)
         }
-        .frame(width: 480, height: 460)
+        .frame(width: 460, height: 500)
+        .background(Color(nsColor: .windowBackgroundColor))
     }
 }
 
-// Feature row component
+// MARK: - About Tab Content
+
+struct AboutTabContent: View {
+    var body: some View {
+        ScrollView {
+            LazyVGrid(columns: [
+                GridItem(.flexible(), spacing: 12),
+                GridItem(.flexible(), spacing: 12)
+            ], spacing: 12) {
+                FeatureRow(icon: "moon.zzz.fill", title: "Prevents Sleep")
+                FeatureRow(icon: "command", title: "Keyboard Shortcut")
+                FeatureRow(icon: "app.badge", title: "App Triggers")
+                FeatureRow(icon: "calendar", title: "Schedules")
+                FeatureRow(icon: "battery.75percent", title: "Battery Protection")
+                FeatureRow(icon: "bolt.fill", title: "Hardware Triggers")
+            }
+            .padding(.horizontal, 24)
+            .padding(.vertical, 16)
+        }
+    }
+}
+
 struct FeatureRow: View {
+    let icon: String
+    let title: String
+
+    var body: some View {
+        HStack(spacing: 12) {
+            Image(systemName: icon)
+                .font(.system(size: 16, weight: .medium))
+                .foregroundColor(.secondary)
+                .frame(width: 32, height: 32)
+                .background(
+                    RoundedRectangle(cornerRadius: 6)
+                        .fill(Color.gray.opacity(0.1))
+                )
+
+            Text(title)
+                .font(.system(size: 13))
+                .foregroundColor(.primary)
+
+            Spacer()
+        }
+        .padding(12)
+        .background(
+            RoundedRectangle(cornerRadius: 8)
+                .fill(Color(nsColor: .controlBackgroundColor).opacity(0.5))
+        )
+    }
+}
+
+// MARK: - Why AwakeApp Tab Content
+
+struct WhyAwakeAppTabContent: View {
+    var body: some View {
+        ScrollView {
+            VStack(alignment: .leading, spacing: 10) {
+                UseCaseRow(
+                    icon: "video.fill",
+                    title: "Presentations & Video Calls",
+                    description: "Keep your display on during important meetings"
+                )
+
+                UseCaseRow(
+                    icon: "arrow.down.circle.fill",
+                    title: "Downloads & Uploads",
+                    description: "Ensure large transfers complete without interruption"
+                )
+
+                UseCaseRow(
+                    icon: "terminal.fill",
+                    title: "Development & Builds",
+                    description: "Keep your Mac awake during long builds"
+                )
+
+                UseCaseRow(
+                    icon: "display.2",
+                    title: "External Display Setup",
+                    description: "Use your Mac with the lid closed"
+                )
+
+                UseCaseRow(
+                    icon: "clock.fill",
+                    title: "Work Hours Automation",
+                    description: "Schedule active hours automatically"
+                )
+            }
+            .padding(.horizontal, 24)
+            .padding(.vertical, 16)
+        }
+    }
+}
+
+struct UseCaseRow: View {
     let icon: String
     let title: String
     let description: String
 
     var body: some View {
-        HStack(spacing: 14) {
+        HStack(spacing: 12) {
             Image(systemName: icon)
-                .font(.system(size: 22))
-                .foregroundColor(.blue)
+                .font(.system(size: 16, weight: .medium))
+                .foregroundColor(.secondary)
                 .frame(width: 32, height: 32)
                 .background(
-                    Circle()
-                        .fill(Color.blue.opacity(0.12))
+                    RoundedRectangle(cornerRadius: 6)
+                        .fill(Color.gray.opacity(0.1))
                 )
 
-            VStack(alignment: .leading, spacing: 3) {
+            VStack(alignment: .leading, spacing: 2) {
                 Text(title)
-                    .font(.system(size: 14, weight: .semibold))
+                    .font(.system(size: 13, weight: .medium))
                     .foregroundColor(.primary)
 
                 Text(description)
-                    .font(.system(size: 12))
+                    .font(.system(size: 11))
                     .foregroundColor(.secondary)
             }
 
             Spacer()
         }
+        .padding(12)
+        .background(
+            RoundedRectangle(cornerRadius: 8)
+                .fill(Color(nsColor: .controlBackgroundColor).opacity(0.5))
+        )
+    }
+}
+
+// MARK: - Tips & Tricks Tab Content
+
+struct TipsAndTricksTabContent: View {
+    var body: some View {
+        ScrollView {
+            VStack(spacing: 8) {
+                TipRow(number: 1, tip: "Press ⌘⇧A anywhere to toggle instantly")
+                TipRow(number: 2, tip: "Add apps like Zoom to auto-activate when running")
+                TipRow(number: 3, tip: "Enable battery protection for automatic safety")
+                TipRow(number: 4, tip: "Create schedules for your regular work hours")
+                TipRow(number: 5, tip: "Show countdown in menu bar for quick glance")
+                TipRow(number: 6, tip: "Use mouse jiggler to prevent 'Away' status")
+            }
+            .padding(.horizontal, 24)
+            .padding(.vertical, 16)
+        }
+    }
+}
+
+struct TipRow: View {
+    let number: Int
+    let tip: String
+
+    var body: some View {
+        HStack(spacing: 12) {
+            Text("\(number)")
+                .font(.system(size: 11, weight: .semibold, design: .rounded))
+                .foregroundColor(.secondary)
+                .frame(width: 24, height: 24)
+                .background(
+                    Circle()
+                        .fill(Color.gray.opacity(0.15))
+                )
+
+            Text(tip)
+                .font(.system(size: 12))
+                .foregroundColor(.primary)
+
+            Spacer()
+        }
+        .padding(10)
+        .background(
+            RoundedRectangle(cornerRadius: 8)
+                .fill(Color(nsColor: .controlBackgroundColor).opacity(0.5))
+        )
     }
 }
 

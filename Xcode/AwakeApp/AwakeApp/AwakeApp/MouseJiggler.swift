@@ -159,6 +159,6 @@ class MouseJiggler: ObservableObject {
         ("30 seconds", 30),
         ("1 minute", 60),
         ("2 minutes", 120),
-        ("5 minutes", 300),
+        ("5 minutes", 300)
     ]
 }

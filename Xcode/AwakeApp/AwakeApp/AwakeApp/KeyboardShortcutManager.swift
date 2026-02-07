@@ -19,7 +19,7 @@ struct KeyboardShortcut: Codable, Equatable {
     var modifiers: UInt // NSEvent.ModifierFlags raw value
 
     /// Default shortcut: ⌘⇧A
-    static let `default` = KeyboardShortcut(
+    static let `default` = Self(
         keyCode: UInt16(kVK_ANSI_A),
         modifiers: NSEvent.ModifierFlags([.command, .shift]).rawValue
     )
@@ -97,7 +97,7 @@ struct KeyboardShortcut: Codable, Equatable {
             UInt16(kVK_F9): "F9",
             UInt16(kVK_F10): "F10",
             UInt16(kVK_F11): "F11",
-            UInt16(kVK_F12): "F12",
+            UInt16(kVK_F12): "F12"
         ]
 
         return keyMap[keyCode]

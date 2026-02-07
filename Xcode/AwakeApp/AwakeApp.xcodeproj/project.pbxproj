@@ -6,14 +6,64 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		0A60CF22BCE71F6B3C4FF99E /* EndToEndWorkflowTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38BEAA6F16FF44DF5737743E /* EndToEndWorkflowTests.swift */; };
+		104B266251E6F78500AB1C30 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18D5B533BBEA6A4962A66502 /* Cocoa.framework */; };
+		1069AC1620F35065678C44D5 /* KeyboardShortcutTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9893F0E036F3A63A7AE0F6E /* KeyboardShortcutTests.swift */; };
+		25B6E0AA2CB2DB3D1B442682 /* AppStateIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36D80E1D312A4733C945850E /* AppStateIntegrationTests.swift */; };
+		262A391BE92B20D0A542211A /* AutomationIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 411AADA987F4120DC33A0AA2 /* AutomationIntegrationTests.swift */; };
+		5E0AE43F218A21486964C5D3 /* ScheduleEntryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E2C5E31A96E508C1F2777A6 /* ScheduleEntryTests.swift */; };
+		70FE0E553D5099691DA2B9BD /* ActivationReasonTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA003AE600E450DA45C2777F /* ActivationReasonTests.swift */; };
+		83A70A2762C55382AD5B1690 /* TriggerModelsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21BC176BBBB25EF8FA8FA403 /* TriggerModelsTests.swift */; };
+		8868A9B31706C9422D7AA072 /* ScheduleLogicTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DB106B999CCD3B88606D69D /* ScheduleLogicTests.swift */; };
+		895003FF0570A2778ECDF4A2 /* MenuBarIconStyleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BDEB252B2801208C805F018 /* MenuBarIconStyleTests.swift */; };
+		B22B9CC8824277F875177C62 /* TimerPresetTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D7E08D2745AB8C9740B4B23 /* TimerPresetTests.swift */; };
+		C36E35F0B3B54AAF9F81D143 /* NotificationIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D93933AE4517F8138261BF0 /* NotificationIntegrationTests.swift */; };
+		E01A7348DDC9B92E4ED4E655 /* ErrorHandlingIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A46DC4047839DA23E2D9CA4 /* ErrorHandlingIntegrationTests.swift */; };
+		EA2B1FB8B75D0646164B7B47 /* ClosedLidIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D5A503C72C97FCC200FE220 /* ClosedLidIntegrationTests.swift */; };
+		FB9A85CD2F37746400707D89 /* CaffeinateManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB9A85CC2F37746400707D89 /* CaffeinateManagerTests.swift */; };
+		FB9A85CF2F37748400707D89 /* SettingsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB9A85CE2F37748400707D89 /* SettingsTests.swift */; };
+		FC3614B93ECA419131B6BC84 /* MockPowerManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F2CF23C131A9838DCA32DD0 /* MockPowerManager.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		5A1BABFB36EB5BEDBA5CCEF8 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = FB02459C2F212D190074EE8A /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = FB0245A32F212D190074EE8A;
+			remoteInfo = AwakeApp;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
+		18D5B533BBEA6A4962A66502 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.0.sdk/System/Library/Frameworks/Cocoa.framework; sourceTree = DEVELOPER_DIR; };
+		1A46DC4047839DA23E2D9CA4 /* ErrorHandlingIntegrationTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ErrorHandlingIntegrationTests.swift; sourceTree = "<group>"; };
+		21BC176BBBB25EF8FA8FA403 /* TriggerModelsTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = TriggerModelsTests.swift; sourceTree = "<group>"; };
+		36D80E1D312A4733C945850E /* AppStateIntegrationTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AppStateIntegrationTests.swift; sourceTree = "<group>"; };
+		38BEAA6F16FF44DF5737743E /* EndToEndWorkflowTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = EndToEndWorkflowTests.swift; sourceTree = "<group>"; };
+		411AADA987F4120DC33A0AA2 /* AutomationIntegrationTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AutomationIntegrationTests.swift; sourceTree = "<group>"; };
+		7BDEB252B2801208C805F018 /* MenuBarIconStyleTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MenuBarIconStyleTests.swift; sourceTree = "<group>"; };
+		7D7E08D2745AB8C9740B4B23 /* TimerPresetTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = TimerPresetTests.swift; sourceTree = "<group>"; };
+		7D93933AE4517F8138261BF0 /* NotificationIntegrationTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = NotificationIntegrationTests.swift; sourceTree = "<group>"; };
+		8DB106B999CCD3B88606D69D /* ScheduleLogicTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ScheduleLogicTests.swift; sourceTree = "<group>"; };
+		8E2C5E31A96E508C1F2777A6 /* ScheduleEntryTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ScheduleEntryTests.swift; sourceTree = "<group>"; };
+		9D5A503C72C97FCC200FE220 /* ClosedLidIntegrationTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ClosedLidIntegrationTests.swift; sourceTree = "<group>"; };
+		9F2CF23C131A9838DCA32DD0 /* MockPowerManager.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MockPowerManager.swift; sourceTree = "<group>"; };
+		CA003AE600E450DA45C2777F /* ActivationReasonTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ActivationReasonTests.swift; sourceTree = "<group>"; };
+		CFE98FF5FD5181B2984373C7 /* AwakeAppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AwakeAppTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		D9893F0E036F3A63A7AE0F6E /* KeyboardShortcutTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = KeyboardShortcutTests.swift; sourceTree = "<group>"; };
+		E57E8E53220CEE56692C7727 /* AwakeAppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AwakeAppTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		FB0245A42F212D190074EE8A /* AwakeApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AwakeApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		FB9A85CC2F37746400707D89 /* CaffeinateManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaffeinateManagerTests.swift; sourceTree = "<group>"; };
+		FB9A85CE2F37748400707D89 /* SettingsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
 		FB0245C02F212E010074EE8A /* Exceptions for "AwakeApp" folder in "AwakeApp" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
+				AwakeApp/Info.plist,
 				Info.plist,
 			);
 			target = FB0245A32F212D190074EE8A /* AwakeApp */;
@@ -32,6 +82,14 @@
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		ECAB0182077122EA6878ACA8 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				104B266251E6F78500AB1C30 /* Cocoa.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		FB0245A12F212D190074EE8A /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -42,11 +100,54 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		74C6621F2DE34EB38D42CC07 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				C98929308C9E740B9F75AF98 /* OS X */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		8506A6A6FCA1A66F2CE7DAB3 /* Mocks */ = {
+			isa = PBXGroup;
+			children = (
+				9F2CF23C131A9838DCA32DD0 /* MockPowerManager.swift */,
+			);
+			path = Mocks;
+			sourceTree = "<group>";
+		};
+		C98929308C9E740B9F75AF98 /* OS X */ = {
+			isa = PBXGroup;
+			children = (
+				18D5B533BBEA6A4962A66502 /* Cocoa.framework */,
+			);
+			name = "OS X";
+			sourceTree = "<group>";
+		};
+		D42B5740FD02569C50EF9309 /* AwakeAppTests */ = {
+			isa = PBXGroup;
+			children = (
+				CA003AE600E450DA45C2777F /* ActivationReasonTests.swift */,
+				D9893F0E036F3A63A7AE0F6E /* KeyboardShortcutTests.swift */,
+				7BDEB252B2801208C805F018 /* MenuBarIconStyleTests.swift */,
+				8E2C5E31A96E508C1F2777A6 /* ScheduleEntryTests.swift */,
+				8DB106B999CCD3B88606D69D /* ScheduleLogicTests.swift */,
+				7D7E08D2745AB8C9740B4B23 /* TimerPresetTests.swift */,
+				21BC176BBBB25EF8FA8FA403 /* TriggerModelsTests.swift */,
+				FDBC5EA881C7EDD04F0C1C65 /* Integration */,
+				8506A6A6FCA1A66F2CE7DAB3 /* Mocks */,
+				FB9A85CB2F37745400707D89 /* Unit */,
+			);
+			path = AwakeAppTests;
+			sourceTree = "<group>";
+		};
 		FB02459B2F212D190074EE8A = {
 			isa = PBXGroup;
 			children = (
 				FB0245A62F212D190074EE8A /* AwakeApp */,
 				FB0245A52F212D190074EE8A /* Products */,
+				74C6621F2DE34EB38D42CC07 /* Frameworks */,
+				D42B5740FD02569C50EF9309 /* AwakeAppTests */,
 			);
 			sourceTree = "<group>";
 		};
@@ -54,13 +155,55 @@
 			isa = PBXGroup;
 			children = (
 				FB0245A42F212D190074EE8A /* AwakeApp.app */,
+				CFE98FF5FD5181B2984373C7 /* AwakeAppTests.xctest */,
+				E57E8E53220CEE56692C7727 /* AwakeAppTests.xctest */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		FB9A85CB2F37745400707D89 /* Unit */ = {
+			isa = PBXGroup;
+			children = (
+				FB9A85CC2F37746400707D89 /* CaffeinateManagerTests.swift */,
+				FB9A85CE2F37748400707D89 /* SettingsTests.swift */,
+			);
+			path = Unit;
+			sourceTree = "<group>";
+		};
+		FDBC5EA881C7EDD04F0C1C65 /* Integration */ = {
+			isa = PBXGroup;
+			children = (
+				36D80E1D312A4733C945850E /* AppStateIntegrationTests.swift */,
+				411AADA987F4120DC33A0AA2 /* AutomationIntegrationTests.swift */,
+				9D5A503C72C97FCC200FE220 /* ClosedLidIntegrationTests.swift */,
+				38BEAA6F16FF44DF5737743E /* EndToEndWorkflowTests.swift */,
+				1A46DC4047839DA23E2D9CA4 /* ErrorHandlingIntegrationTests.swift */,
+				7D93933AE4517F8138261BF0 /* NotificationIntegrationTests.swift */,
+			);
+			path = Integration;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		276EFD3853B1A1DBBA64C500 /* AwakeAppTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = E7CD076271827127427CCE1E /* Build configuration list for PBXNativeTarget "AwakeAppTests" */;
+			buildPhases = (
+				0FAC25FA361EDF63C4F1F8EE /* Sources */,
+				ECAB0182077122EA6878ACA8 /* Frameworks */,
+				7CA1D55F462A919901EF8F16 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				BB984F74A10DE80175688F13 /* PBXTargetDependency */,
+			);
+			name = AwakeAppTests;
+			productName = AwakeAppTests;
+			productReference = E57E8E53220CEE56692C7727 /* AwakeAppTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 		FB0245A32F212D190074EE8A /* AwakeApp */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = FB0245AF2F212D1B0074EE8A /* Build configuration list for PBXNativeTarget "AwakeApp" */;
@@ -77,8 +220,6 @@
 				FB0245A62F212D190074EE8A /* AwakeApp */,
 			);
 			name = AwakeApp;
-			packageProductDependencies = (
-			);
 			productName = AwakeApp;
 			productReference = FB0245A42F212D190074EE8A /* AwakeApp.app */;
 			productType = "com.apple.product-type.application";
@@ -113,11 +254,19 @@
 			projectRoot = "";
 			targets = (
 				FB0245A32F212D190074EE8A /* AwakeApp */,
+				276EFD3853B1A1DBBA64C500 /* AwakeAppTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		7CA1D55F462A919901EF8F16 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		FB0245A22F212D190074EE8A /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -128,6 +277,29 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		0FAC25FA361EDF63C4F1F8EE /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				70FE0E553D5099691DA2B9BD /* ActivationReasonTests.swift in Sources */,
+				1069AC1620F35065678C44D5 /* KeyboardShortcutTests.swift in Sources */,
+				FB9A85CF2F37748400707D89 /* SettingsTests.swift in Sources */,
+				895003FF0570A2778ECDF4A2 /* MenuBarIconStyleTests.swift in Sources */,
+				5E0AE43F218A21486964C5D3 /* ScheduleEntryTests.swift in Sources */,
+				8868A9B31706C9422D7AA072 /* ScheduleLogicTests.swift in Sources */,
+				B22B9CC8824277F875177C62 /* TimerPresetTests.swift in Sources */,
+				83A70A2762C55382AD5B1690 /* TriggerModelsTests.swift in Sources */,
+				25B6E0AA2CB2DB3D1B442682 /* AppStateIntegrationTests.swift in Sources */,
+				FB9A85CD2F37746400707D89 /* CaffeinateManagerTests.swift in Sources */,
+				262A391BE92B20D0A542211A /* AutomationIntegrationTests.swift in Sources */,
+				EA2B1FB8B75D0646164B7B47 /* ClosedLidIntegrationTests.swift in Sources */,
+				0A60CF22BCE71F6B3C4FF99E /* EndToEndWorkflowTests.swift in Sources */,
+				E01A7348DDC9B92E4ED4E655 /* ErrorHandlingIntegrationTests.swift in Sources */,
+				C36E35F0B3B54AAF9F81D143 /* NotificationIntegrationTests.swift in Sources */,
+				FC3614B93ECA419131B6BC84 /* MockPowerManager.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		FB0245A02F212D190074EE8A /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -137,7 +309,46 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXTargetDependency section */
+		BB984F74A10DE80175688F13 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = AwakeApp;
+			target = FB0245A32F212D190074EE8A /* AwakeApp */;
+			targetProxy = 5A1BABFB36EB5BEDBA5CCEF8 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
 /* Begin XCBuildConfiguration section */
+		4CC1675B10F8EAD498ED6D34 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_STRICT_CONCURRENCY = complete;
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/AwakeApp.app/Contents/MacOS/AwakeApp";
+			};
+			name = Release;
+		};
+		8A40083BC12C737C88487480 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_STRICT_CONCURRENCY = complete;
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/AwakeApp.app/Contents/MacOS/AwakeApp";
+			};
+			name = Debug;
+		};
 		FB0245AD2F212D1B0074EE8A /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -191,6 +402,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				"INFOPLIST_FILE[sdk=*]" = "Awake​App​/​Awake​App​/​Info​.plist";
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MACOSX_DEPLOYMENT_TARGET = 26.2;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
@@ -249,6 +461,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				"INFOPLIST_FILE[sdk=*]" = "Awake​App​/​Awake​App​/​Info​.plist";
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MACOSX_DEPLOYMENT_TARGET = 26.2;
 				MTL_ENABLE_DEBUG_INFO = NO;
@@ -329,6 +542,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		E7CD076271827127427CCE1E /* Build configuration list for PBXNativeTarget "AwakeAppTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4CC1675B10F8EAD498ED6D34 /* Release */,
+				8A40083BC12C737C88487480 /* Debug */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		FB02459F2F212D190074EE8A /* Build configuration list for PBXProject "AwakeApp" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

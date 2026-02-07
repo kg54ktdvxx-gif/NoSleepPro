@@ -133,7 +133,7 @@ final class NotificationIntegrationTests: XCTestCase {
             (.twoHours, 2 * 60 * 60),
             (.fiveHours, 5 * 60 * 60),
             (.indefinite, nil),
-            (.custom(minutes: 45), 45 * 60),
+            (.custom(minutes: 45), 45 * 60)
         ]
 
         for (preset, expectedSeconds) in presets {

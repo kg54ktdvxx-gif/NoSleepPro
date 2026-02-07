@@ -8,6 +8,7 @@
 import XCTest
 @testable import AwakeApp
 
+@MainActor
 final class AutomationIntegrationTests: XCTestCase {
 
     // MARK: - App Trigger Integration Tests
@@ -52,7 +53,7 @@ final class AutomationIntegrationTests: XCTestCase {
         let triggers = [
             AppTrigger(bundleIdentifier: "com.microsoft.teams", appName: "Teams", isEnabled: false),
             AppTrigger(bundleIdentifier: "us.zoom.xos", appName: "Zoom", isEnabled: true),
-            AppTrigger(bundleIdentifier: "com.apple.Keynote", appName: "Keynote", isEnabled: true),
+            AppTrigger(bundleIdentifier: "com.apple.Keynote", appName: "Keynote", isEnabled: true)
         ]
 
         // Zoom is running
@@ -143,7 +144,7 @@ final class AutomationIntegrationTests: XCTestCase {
     func testOverlappingSchedules() {
         let schedules = [
             createTestSchedule(days: [.monday], startHour: 9, startMinute: 0, endHour: 12, endMinute: 0),
-            createTestSchedule(days: [.monday], startHour: 11, startMinute: 0, endHour: 14, endMinute: 0),
+            createTestSchedule(days: [.monday], startHour: 11, startMinute: 0, endHour: 14, endMinute: 0)
         ]
 
         // At 11:30, both schedules are active
@@ -225,64 +226,6 @@ final class AutomationIntegrationTests: XCTestCase {
 
         XCTAssertTrue(mockState.isActive)
         XCTAssertTrue(mockPower.isRunning)
-    }
-
-    // MARK: - Wi-Fi Trigger Integration Tests
-
-    func testWiFiTriggerActivation() {
-        let mockState = MockAppState()
-        let mockPower = MockPowerManager()
-        let mockWiFi = MockWiFiProvider()
-
-        let triggers = [
-            WiFiTrigger(ssid: "HomeNetwork", isEnabled: true),
-            WiFiTrigger(ssid: "OfficeWiFi", isEnabled: true),
-        ]
-
-        // Connect to home network
-        mockWiFi.connect(to: "HomeNetwork")
-
-        // Check for matching trigger
-        let matchingTrigger = triggers.first { trigger in
-            trigger.isEnabled && trigger.ssid.lowercased() == mockWiFi.currentSSID?.lowercased()
-        }
-
-        if let trigger = matchingTrigger {
-            mockState.activate(with: .indefinite)
-            mockPower.start(duration: nil, allowDisplaySleep: false, reason: .wifiTrigger(ssid: trigger.ssid))
-        }
-
-        XCTAssertNotNil(matchingTrigger)
-        XCTAssertTrue(mockState.isActive)
-        XCTAssertEqual(mockPower.activationReason, .wifiTrigger(ssid: "HomeNetwork"))
-    }
-
-    func testWiFiDisconnectDeactivation() {
-        let mockState = MockAppState()
-        let mockPower = MockPowerManager()
-        let mockWiFi = MockWiFiProvider()
-
-        let triggers = [WiFiTrigger(ssid: "HomeNetwork", isEnabled: true)]
-
-        // Connect and activate
-        mockWiFi.connect(to: "HomeNetwork")
-        mockState.activate(with: .indefinite)
-        mockPower.start(duration: nil, allowDisplaySleep: false, reason: .wifiTrigger(ssid: "HomeNetwork"))
-
-        // Disconnect
-        mockWiFi.disconnect()
-
-        let matchingTrigger = triggers.first { trigger in
-            trigger.isEnabled && trigger.ssid.lowercased() == mockWiFi.currentSSID?.lowercased()
-        }
-
-        if matchingTrigger == nil && mockPower.activationReason == .wifiTrigger(ssid: "HomeNetwork") {
-            mockState.deactivate()
-            mockPower.stop()
-        }
-
-        XCTAssertFalse(mockState.isActive)
-        XCTAssertFalse(mockPower.isRunning)
     }
 
     // MARK: - Hardware Trigger Integration Tests

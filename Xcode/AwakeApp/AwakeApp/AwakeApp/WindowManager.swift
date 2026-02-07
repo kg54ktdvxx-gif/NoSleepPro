@@ -31,7 +31,7 @@ final class WindowManager: ObservableObject {
         let hostingController = NSHostingController(rootView: settingsView)
 
         let window = NSWindow(contentViewController: hostingController)
-        window.title = "AwakeApp Settings"
+        window.title = "No Sleep Pro Settings"
         window.styleMask = [.titled, .closable, .miniaturizable]
         window.setContentSize(NSSize(width: 520, height: 500))
         window.center()
@@ -43,10 +43,15 @@ final class WindowManager: ObservableObject {
     }
 
     func openAbout() {
-        if let window = aboutWindow, window.isVisible {
-            window.makeKeyAndOrderFront(nil)
-            NSApp.activate(ignoringOtherApps: true)
-            return
+        if let window = aboutWindow {
+            if window.isVisible {
+                window.makeKeyAndOrderFront(nil)
+                NSApp.activate(ignoringOtherApps: true)
+                return
+            } else {
+                window.close()
+                aboutWindow = nil
+            }
         }
 
         let aboutView = AboutView()
@@ -54,9 +59,9 @@ final class WindowManager: ObservableObject {
         let hostingController = NSHostingController(rootView: aboutView)
 
         let window = NSWindow(contentViewController: hostingController)
-        window.title = "About AwakeApp"
+        window.title = "About No Sleep Pro"
         window.styleMask = [.titled, .closable]
-        window.setContentSize(NSSize(width: 480, height: 460))
+        window.setContentSize(NSSize(width: 480, height: 520))
         window.center()
         window.isReleasedWhenClosed = false
 
@@ -64,4 +69,5 @@ final class WindowManager: ObservableObject {
         window.makeKeyAndOrderFront(nil)
         NSApp.activate(ignoringOtherApps: true)
     }
+
 }

@@ -111,7 +111,7 @@ enum TimerPreset: Equatable, Identifiable, Hashable {
     }
 
     /// Standard presets (excluding custom)
-    static var allCases: [TimerPreset] {
+    static var allCases: [Self] {
         [.fifteenMinutes, .thirtyMinutes, .oneHour, .twoHours, .fiveHours, .indefinite]
     }
 

@@ -5,7 +5,7 @@
     <key>CFBundleName</key>
     <string>AwakeApp</string>
     <key>CFBundleDisplayName</key>
-    <string>AwakeApp</string>
+    <string>No Sleep Pro</string>
     <key>CFBundleIdentifier</key>
     <string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
     <key>CFBundleVersion</key>
@@ -24,5 +24,7 @@
     <string>Copyright © 2026. All rights reserved.</string>
     <key>LSApplicationCategoryType</key>
     <string>public.app-category.utilities</string>
+    <key>NSAccessibilityUsageDescription</key>
+    <string>No Sleep Pro needs accessibility permission to enable the mouse jiggler feature and global keyboard shortcuts.</string>
 </dict>
 </plist>

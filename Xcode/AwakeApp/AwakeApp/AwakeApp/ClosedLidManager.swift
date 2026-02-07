@@ -18,7 +18,7 @@ import os.log
 private let logger = Logger(subsystem: "com.awakeapp", category: "ClosedLid")
 
 /// Errors related to closed-lid mode
-enum ClosedLidError: LocalizedError {
+enum ClosedLidError: LocalizedError, Equatable {
     case noPowerConnected
     case noExternalDisplay
     case assertionFailed(IOReturn)
@@ -242,7 +242,9 @@ final class ClosedLidManager: ObservableObject {
         let sources = IOPSCopyPowerSourcesList(snapshot).takeRetainedValue() as Array
 
         for source in sources {
-            let description = IOPSGetPowerSourceDescription(snapshot, source).takeUnretainedValue() as! [String: Any]
+            guard let description = IOPSGetPowerSourceDescription(snapshot, source)?.takeUnretainedValue() as? [String: Any] else {
+                continue
+            }
             if let type = description[kIOPSTypeKey] as? String,
                type == kIOPSInternalBatteryType {
                 return true
@@ -256,7 +258,7 @@ final class ClosedLidManager: ObservableObject {
         releaseAssertion()
 
         var assertionID: IOPMAssertionID = 0
-        let assertionName = "AwakeApp closed-lid mode" as CFString
+        let assertionName = "No Sleep Pro closed-lid mode" as CFString
 
         // Use PreventUserIdleSystemSleep to keep system awake
         // Combined with external display, this enables clamshell mode

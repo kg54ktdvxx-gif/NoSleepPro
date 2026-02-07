@@ -8,6 +8,7 @@
 import XCTest
 @testable import AwakeApp
 
+@MainActor
 final class AppStateIntegrationTests: XCTestCase {
 
     // MARK: - Activation Flow Tests
@@ -112,7 +113,6 @@ final class AppStateIntegrationTests: XCTestCase {
             .schedule,
             .keyboardShortcut,
             .appTrigger(appName: "Zoom"),
-            .wifiTrigger(ssid: "HomeNetwork"),
             .hardwareTrigger(type: "Power connected")
         ]
 

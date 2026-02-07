@@ -91,7 +91,7 @@ final class KeyboardShortcutTests: XCTestCase {
             (kVK_Return, "↩"),
             (kVK_Tab, "⇥"),
             (kVK_Delete, "⌫"),
-            (kVK_Escape, "⎋"),
+            (kVK_Escape, "⎋")
         ]
 
         for (keyCode, expected) in specialKeys {
@@ -104,7 +104,7 @@ final class KeyboardShortcutTests: XCTestCase {
         let functionKeys: [(keyCode: Int, expected: String)] = [
             (kVK_F1, "F1"), (kVK_F2, "F2"), (kVK_F3, "F3"), (kVK_F4, "F4"),
             (kVK_F5, "F5"), (kVK_F6, "F6"), (kVK_F7, "F7"), (kVK_F8, "F8"),
-            (kVK_F9, "F9"), (kVK_F10, "F10"), (kVK_F11, "F11"), (kVK_F12, "F12"),
+            (kVK_F9, "F9"), (kVK_F10, "F10"), (kVK_F11, "F11"), (kVK_F12, "F12")
         ]
 
         for (keyCode, expected) in functionKeys {

@@ -48,7 +48,6 @@
 "settings.automation" = "Automation";
 "settings.schedule" = "Schedule";
 "settings.apps" = "Apps";
-"settings.wifi" = "Wi-Fi";
 
 // MARK: - General Settings
 "settings.display_options" = "Display Options";
@@ -111,18 +110,6 @@
 "settings.select_app" = "Select App";
 "settings.select_app_description" = "Choose an app that will automatically activate sleep prevention when running.";
 
-// MARK: - Wi-Fi Triggers Settings
-"settings.enable_wifi_triggers" = "Enable Wi-Fi triggers";
-"settings.add_network" = "Add Network";
-"settings.add_current" = "Add Current";
-"settings.no_wifi_triggers" = "No Wi-Fi triggers configured";
-"settings.wifi_triggers_description" = "Add Wi-Fi networks that will automatically activate sleep prevention when connected.";
-"settings.connected_to" = "Connected to: %@";
-"wifi.connected" = "Connected";
-"wifi.add_title" = "Add Wi-Fi Network";
-"wifi.add_description" = "Enter the name (SSID) of the Wi-Fi network that should activate sleep prevention.";
-"wifi.network_name" = "Network name (SSID)";
-
 // MARK: - Icon Picker
 "icon.choose_style" = "Choose Icon Style";
 "icon.preview_note" = "Preview shows active state";
@@ -140,14 +127,12 @@
 "auto.schedule" = "Activated by schedule";
 "auto.app" = "Triggered by %@";
 "auto.shortcut" = "Activated via shortcut";
-"auto.wifi" = "Connected to %@";
 "auto.hardware" = "%@ detected";
 "auto.badge" = "Auto";
 
 // MARK: - Warnings & Errors
 "warning.battery_stopped" = "Stopped to preserve battery";
 "error.accessibility_required" = "Accessibility permission required";
-"error.wifi_unavailable" = "No Wi-Fi interface available";
 
 // MARK: - About View
 "about.title" = "About AwakeApp";
@@ -158,7 +143,7 @@
 "about.feature.schedule" = "Schedule-based activation";
 "about.feature.battery" = "Battery protection";
 "about.feature.shortcuts" = "Custom keyboard shortcuts";
-"about.feature.triggers" = "App & Wi-Fi triggers";
+"about.feature.triggers" = "App triggers";
 "about.made_with" = "Made with love in Singapore";
 
 // MARK: - Notifications

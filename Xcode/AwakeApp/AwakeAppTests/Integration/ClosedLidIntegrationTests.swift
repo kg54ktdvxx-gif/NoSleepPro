@@ -8,6 +8,7 @@
 import XCTest
 @testable import AwakeApp
 
+@MainActor
 final class ClosedLidIntegrationTests: XCTestCase {
 
     // MARK: - Requirements Tests
@@ -18,7 +19,7 @@ final class ClosedLidIntegrationTests: XCTestCase {
             (power: true, display: true, canEnable: true),
             (power: true, display: false, canEnable: false),
             (power: false, display: true, canEnable: false),
-            (power: false, display: false, canEnable: false),
+            (power: false, display: false, canEnable: false)
         ]
 
         for testCase in testCases {
@@ -224,7 +225,7 @@ final class ClosedLidIntegrationTests: XCTestCase {
             (builtInDisplayVisible: true, externalDisplays: 0, expectedLidClosed: false),  // Laptop, lid open
             (builtInDisplayVisible: true, externalDisplays: 1, expectedLidClosed: false),  // Laptop with external, lid open
             (builtInDisplayVisible: false, externalDisplays: 1, expectedLidClosed: true),  // Laptop with external, lid closed
-            (builtInDisplayVisible: false, externalDisplays: 2, expectedLidClosed: true),  // Laptop with 2 externals, lid closed
+            (builtInDisplayVisible: false, externalDisplays: 2, expectedLidClosed: true)  // Laptop with 2 externals, lid closed
         ]
 
         for scenario in scenarios {
@@ -244,11 +245,11 @@ final class ClosedLidIntegrationTests: XCTestCase {
         var isEnabled = false
 
         // Toggle on
-        isEnabled = !isEnabled
+        isEnabled.toggle()
         XCTAssertTrue(isEnabled)
 
         // Toggle off
-        isEnabled = !isEnabled
+        isEnabled.toggle()
         XCTAssertFalse(isEnabled)
     }
 }

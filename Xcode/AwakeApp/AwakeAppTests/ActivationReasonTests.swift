@@ -29,11 +29,6 @@ final class ActivationReasonTests: XCTestCase {
         XCTAssertEqual(ActivationReason.keyboardShortcut.description, "Shortcut")
     }
 
-    func testWifiTriggerDescription() {
-        let reason = ActivationReason.wifiTrigger(ssid: "HomeNetwork")
-        XCTAssertEqual(reason.description, "Wi-Fi: HomeNetwork")
-    }
-
     func testHardwareTriggerDescription() {
         let reason = ActivationReason.hardwareTrigger(type: "Power connected")
         XCTAssertEqual(reason.description, "Hardware: Power connected")
@@ -53,15 +48,6 @@ final class ActivationReasonTests: XCTestCase {
         XCTAssertNotEqual(
             ActivationReason.appTrigger(appName: "Zoom"),
             ActivationReason.appTrigger(appName: "Teams")
-        )
-
-        XCTAssertEqual(
-            ActivationReason.wifiTrigger(ssid: "Home"),
-            ActivationReason.wifiTrigger(ssid: "Home")
-        )
-        XCTAssertNotEqual(
-            ActivationReason.wifiTrigger(ssid: "Home"),
-            ActivationReason.wifiTrigger(ssid: "Office")
         )
 
         XCTAssertEqual(

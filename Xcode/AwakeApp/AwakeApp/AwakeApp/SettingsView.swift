@@ -32,11 +32,6 @@ struct SettingsView: View {
                 .tabItem {
                     Label("Apps", systemImage: "app.badge")
                 }
-
-            WiFiTriggersSettingsTab()
-                .tabItem {
-                    Label("Wi-Fi", systemImage: "wifi")
-                }
         }
         .frame(width: 520, height: 480)
         .environmentObject(settings)
@@ -77,12 +72,15 @@ struct GeneralSettingsTab: View {
 
                 Toggle("Show countdown in menu bar", isOn: $settings.showMenuBarCountdown)
                     .help("Display remaining time next to the menu bar icon")
+                    .accessibilityHint("Display remaining time next to the menu bar icon")
 
                 Toggle("Allow display to sleep", isOn: $settings.allowDisplaySleep)
                     .help("Keep system awake but allow display to turn off")
+                    .accessibilityHint("Keep system awake but allow display to turn off")
 
                 Toggle("Launch at login", isOn: $settings.launchAtLogin)
-                    .help("Automatically start AwakeApp when you log in")
+                    .help("Automatically start No Sleep Pro when you log in")
+                    .accessibilityHint("Automatically start No Sleep Pro when you log in")
             } header: {
                 Text("Display Options")
             }
@@ -118,6 +116,7 @@ struct GeneralSettingsTab: View {
             Section {
                 Toggle("Enable mouse jiggler", isOn: $settings.mouseJigglerEnabled)
                     .help("Periodically move mouse to prevent 'Away' status in chat apps")
+                    .accessibilityHint("Periodically move mouse to prevent Away status in chat apps")
 
                 if settings.mouseJigglerEnabled {
                     Picker("Jiggle interval:", selection: $settings.mouseJigglerInterval) {
@@ -196,6 +195,8 @@ struct ShortcutRecorderButton: View {
             )
         }
         .buttonStyle(.plain)
+        .accessibilityLabel(shortcutManager.isRecording ? "Recording shortcut, press keys to set" : "Keyboard shortcut: \(shortcutManager.currentShortcut.displayString)")
+        .accessibilityHint("Double tap to record a new keyboard shortcut")
 
         Button(action: {
             shortcutManager.resetToDefault()
@@ -205,6 +206,8 @@ struct ShortcutRecorderButton: View {
         }
         .buttonStyle(.plain)
         .help("Reset to default (⌘⇧A)")
+        .accessibilityLabel("Reset shortcut to default")
+        .accessibilityHint("Reset to Command Shift A")
     }
 }
 
@@ -219,6 +222,7 @@ struct AutomationSettingsTab: View {
             Section {
                 Toggle("Enable battery protection", isOn: $settings.batteryProtectionEnabled)
                     .help("Automatically stop when battery is low")
+                    .accessibilityHint("Automatically stop sleep prevention when battery is low")
 
                 if settings.batteryProtectionEnabled {
                     HStack {
@@ -265,6 +269,7 @@ struct AutomationSettingsTab: View {
             Section {
                 Toggle("Enable closed-lid mode", isOn: $settings.closedLidModeEnabled)
                     .help("Keep Mac awake with lid closed when using external display")
+                    .accessibilityHint("Keep Mac awake with lid closed when using external display")
                     .onChange(of: settings.closedLidModeEnabled) { _, enabled in
                         if enabled {
                             closedLidManager.startMonitoring()
@@ -306,12 +311,15 @@ struct AutomationSettingsTab: View {
                 if settings.hardwareTriggersEnabled {
                     Toggle("Activate when power adapter connected", isOn: $settings.activateOnPowerConnect)
                         .help("Automatically activate when you plug in your Mac")
+                        .accessibilityHint("Automatically activate when you plug in your Mac")
 
                     Toggle("Deactivate when on battery", isOn: $settings.deactivateOnBattery)
                         .help("Automatically stop when you unplug your Mac")
+                        .accessibilityHint("Automatically stop when you unplug your Mac")
 
                     Toggle("Activate when external display connected", isOn: $settings.activateOnExternalDisplay)
                         .help("Automatically activate when connecting an external monitor")
+                        .accessibilityHint("Automatically activate when connecting an external monitor")
                 }
             } header: {
                 Text("Hardware Triggers")
@@ -413,6 +421,8 @@ struct StatusIndicator: View {
                 .foregroundColor(.secondary)
         }
         .frame(width: 50)
+        .accessibilityElement(children: .combine)
+        .accessibilityLabel("\(label): \(isActive ? "connected" : "not connected")")
     }
 }
 
@@ -439,18 +449,46 @@ struct ScheduleSettingsTab: View {
 
             // Schedule list
             if settings.schedules.isEmpty {
-                VStack(spacing: 12) {
-                    Image(systemName: "calendar.badge.clock")
-                        .font(.system(size: 40))
-                        .foregroundColor(.secondary)
-                    Text("No schedules configured")
-                        .font(.headline)
-                        .foregroundColor(.secondary)
-                    Text("Add a schedule to automatically keep your Mac awake during specific times.")
-                        .font(.caption)
-                        .foregroundColor(.secondary)
-                        .multilineTextAlignment(.center)
-                        .padding(.horizontal)
+                VStack(spacing: 16) {
+                    ZStack {
+                        Circle()
+                            .fill(Color.awakeOrange.opacity(0.12))
+                            .frame(width: 80, height: 80)
+
+                        Image(systemName: "calendar.badge.clock")
+                            .font(.system(size: 36, weight: .semibold))
+                            .foregroundColor(.awakeOrange)
+                    }
+
+                    VStack(spacing: 8) {
+                        Text("Automate Your Work Hours")
+                            .font(.system(size: 17, weight: .semibold))
+                            .foregroundColor(.primary)
+
+                        Text("Create schedules to automatically keep your Mac awake during specific times. Perfect for work hours or regular meetings.")
+                            .font(.system(size: 13))
+                            .foregroundColor(.secondary)
+                            .multilineTextAlignment(.center)
+                            .padding(.horizontal, 24)
+                    }
+
+                    Button(action: { showingAddSchedule = true }) {
+                        HStack(spacing: 6) {
+                            Image(systemName: "plus.circle.fill")
+                            Text("Add Your First Schedule")
+                        }
+                        .font(.system(size: 14, weight: .semibold))
+                        .foregroundColor(.white)
+                        .padding(.horizontal, 20)
+                        .padding(.vertical, 10)
+                        .background(
+                            Capsule()
+                                .fill(Color.awakeOrange)
+                        )
+                    }
+                    .buttonStyle(.plain)
+                    .disabled(!settings.schedulesEnabled)
+                    .opacity(settings.schedulesEnabled ? 1 : 0.5)
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
             } else {
@@ -615,18 +653,46 @@ struct AppTriggersSettingsTab: View {
 
             // App list
             if settings.appTriggers.isEmpty {
-                VStack(spacing: 12) {
-                    Image(systemName: "app.badge")
-                        .font(.system(size: 40))
-                        .foregroundColor(.secondary)
-                    Text("No app triggers configured")
-                        .font(.headline)
-                        .foregroundColor(.secondary)
-                    Text("Add apps that will automatically activate sleep prevention when running.")
-                        .font(.caption)
-                        .foregroundColor(.secondary)
-                        .multilineTextAlignment(.center)
-                        .padding(.horizontal)
+                VStack(spacing: 16) {
+                    ZStack {
+                        Circle()
+                            .fill(Color.awakePurple.opacity(0.12))
+                            .frame(width: 80, height: 80)
+
+                        Image(systemName: "app.badge")
+                            .font(.system(size: 36, weight: .semibold))
+                            .foregroundColor(.awakePurple)
+                    }
+
+                    VStack(spacing: 8) {
+                        Text("Smart App Detection")
+                            .font(.system(size: 17, weight: .semibold))
+                            .foregroundColor(.primary)
+
+                        Text("Add apps like Zoom, PowerPoint, or Final Cut Pro. When they're running, No Sleep Pro will automatically keep your Mac awake.")
+                            .font(.system(size: 13))
+                            .foregroundColor(.secondary)
+                            .multilineTextAlignment(.center)
+                            .padding(.horizontal, 24)
+                    }
+
+                    Button(action: { showingAppPicker = true }) {
+                        HStack(spacing: 6) {
+                            Image(systemName: "plus.circle.fill")
+                            Text("Add Your First App")
+                        }
+                        .font(.system(size: 14, weight: .semibold))
+                        .foregroundColor(.white)
+                        .padding(.horizontal, 20)
+                        .padding(.vertical, 10)
+                        .background(
+                            Capsule()
+                                .fill(Color.awakePurple)
+                        )
+                    }
+                    .buttonStyle(.plain)
+                    .disabled(!settings.appTriggersEnabled)
+                    .opacity(settings.appTriggersEnabled ? 1 : 0.5)
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
             } else {
@@ -732,160 +798,6 @@ struct AppPickerView: View {
         }
         .padding()
         .frame(width: 350, height: 400)
-    }
-}
-
-// MARK: - Wi-Fi Triggers Settings Tab
-
-struct WiFiTriggersSettingsTab: View {
-    @EnvironmentObject var settings: AppSettings
-    @StateObject private var wifiMonitor = WiFiMonitor.shared
-    @State private var showingAddNetwork = false
-    @State private var newSSID = ""
-
-    var body: some View {
-        VStack(spacing: 0) {
-            // Header
-            HStack {
-                Toggle("Enable Wi-Fi triggers", isOn: $settings.wifiTriggersEnabled)
-                Spacer()
-                Button(action: { showingAddNetwork = true }) {
-                    Label("Add Network", systemImage: "plus")
-                }
-                .disabled(!settings.wifiTriggersEnabled)
-            }
-            .padding()
-
-            // Current network indicator
-            if let currentSSID = wifiMonitor.currentSSID {
-                HStack {
-                    Image(systemName: "wifi")
-                        .foregroundColor(.green)
-                    Text("Connected to: \(currentSSID)")
-                        .font(.caption)
-                        .foregroundColor(.secondary)
-                    Spacer()
-                    if !settings.wifiTriggers.contains(where: { $0.ssid == currentSSID }) {
-                        Button("Add Current") {
-                            let trigger = WiFiTrigger(ssid: currentSSID)
-                            settings.wifiTriggers.append(trigger)
-                        }
-                        .buttonStyle(.borderedProminent)
-                        .controlSize(.small)
-                    }
-                }
-                .padding(.horizontal)
-                .padding(.bottom, 8)
-            }
-
-            Divider()
-
-            // Network list
-            if settings.wifiTriggers.isEmpty {
-                VStack(spacing: 12) {
-                    Image(systemName: "wifi")
-                        .font(.system(size: 40))
-                        .foregroundColor(.secondary)
-                    Text("No Wi-Fi triggers configured")
-                        .font(.headline)
-                        .foregroundColor(.secondary)
-                    Text("Add Wi-Fi networks that will automatically activate sleep prevention when connected.")
-                        .font(.caption)
-                        .foregroundColor(.secondary)
-                        .multilineTextAlignment(.center)
-                        .padding(.horizontal)
-                }
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-            } else {
-                List {
-                    ForEach($settings.wifiTriggers) { $trigger in
-                        HStack {
-                            Toggle("", isOn: $trigger.isEnabled)
-                                .labelsHidden()
-
-                            Image(systemName: "wifi")
-                                .foregroundColor(isCurrentNetwork(trigger.ssid) ? .green : .secondary)
-
-                            Text(trigger.ssid)
-                                .opacity(trigger.isEnabled ? 1 : 0.5)
-
-                            Spacer()
-
-                            if isCurrentNetwork(trigger.ssid) {
-                                Text("Connected")
-                                    .font(.caption)
-                                    .foregroundColor(.green)
-                                    .padding(.horizontal, 8)
-                                    .padding(.vertical, 2)
-                                    .background(Color.green.opacity(0.15))
-                                    .cornerRadius(4)
-                            }
-                        }
-                    }
-                    .onDelete { indexSet in
-                        settings.wifiTriggers.remove(atOffsets: indexSet)
-                    }
-                }
-            }
-        }
-        .opacity(settings.wifiTriggersEnabled ? 1 : 0.6)
-        .sheet(isPresented: $showingAddNetwork) {
-            AddWiFiNetworkView { ssid in
-                let trigger = WiFiTrigger(ssid: ssid)
-                if !settings.wifiTriggers.contains(where: { $0.ssid.lowercased() == ssid.lowercased() }) {
-                    settings.wifiTriggers.append(trigger)
-                }
-            }
-        }
-        .onAppear {
-            wifiMonitor.startMonitoring()
-        }
-    }
-
-    private func isCurrentNetwork(_ ssid: String) -> Bool {
-        wifiMonitor.currentSSID?.lowercased() == ssid.lowercased()
-    }
-}
-
-struct AddWiFiNetworkView: View {
-    @Environment(\.dismiss) var dismiss
-    @State private var ssid = ""
-    let onAdd: (String) -> Void
-
-    var body: some View {
-        VStack(spacing: 20) {
-            Text("Add Wi-Fi Network")
-                .font(.headline)
-
-            Text("Enter the name (SSID) of the Wi-Fi network that should activate sleep prevention.")
-                .font(.caption)
-                .foregroundColor(.secondary)
-                .multilineTextAlignment(.center)
-
-            TextField("Network name (SSID)", text: $ssid)
-                .textFieldStyle(.roundedBorder)
-                .frame(width: 250)
-
-            Spacer()
-
-            HStack {
-                Button("Cancel") {
-                    dismiss()
-                }
-                .keyboardShortcut(.cancelAction)
-
-                Spacer()
-
-                Button("Add") {
-                    onAdd(ssid.trimmingCharacters(in: .whitespaces))
-                    dismiss()
-                }
-                .keyboardShortcut(.defaultAction)
-                .disabled(ssid.trimmingCharacters(in: .whitespaces).isEmpty)
-            }
-        }
-        .padding()
-        .frame(width: 320, height: 200)
     }
 }
 

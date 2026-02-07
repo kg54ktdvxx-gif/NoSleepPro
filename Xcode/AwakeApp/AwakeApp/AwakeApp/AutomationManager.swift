@@ -3,7 +3,7 @@
 //  AwakeApp
 //
 //  Handles automatic activation via app triggers, schedules, battery monitoring, keyboard shortcuts,
-//  Wi-Fi triggers, hardware triggers, and mouse jiggler
+//  hardware triggers, and mouse jiggler
 //
 
 import Foundation
@@ -27,7 +27,6 @@ final class AutomationManager: ObservableObject {
     private var appTerminateObserver: NSObjectProtocol?
     private var scheduleTimer: Timer?
     private var batteryTimer: Timer?
-    private var wifiTimer: Timer?
     private var hardwareTimer: Timer?
     private var cancellables = Set<AnyCancellable>()
 
@@ -41,9 +40,6 @@ final class AutomationManager: ObservableObject {
 
     /// Whether currently activated by schedule
     @Published var activatedBySchedule: Bool = false
-
-    /// Whether currently activated by Wi-Fi
-    @Published var activatedByWiFi: Bool = false
 
     /// Whether currently activated by hardware trigger
     @Published var activatedByHardware: Bool = false
@@ -80,7 +76,6 @@ final class AutomationManager: ObservableObject {
         startAppMonitoring()
         startScheduleMonitoring()
         startBatteryMonitoring()
-        startWiFiMonitoring()
         startHardwareMonitoring()
         setupKeyboardShortcut()
         updateMouseJiggler()
@@ -97,7 +92,6 @@ final class AutomationManager: ObservableObject {
         stopAppMonitoring()
         stopScheduleMonitoring()
         stopBatteryMonitoring()
-        stopWiFiMonitoring()
         stopHardwareMonitoring()
         removeKeyboardShortcut()
         MouseJiggler.shared.stop()
@@ -330,67 +324,6 @@ final class AutomationManager: ObservableObject {
         // Send notification if enabled
         if settings.notifyOnBatteryStop {
             NotificationManager.shared.sendBatteryProtectionNotification(batteryLevel: level)
-        }
-    }
-
-    // MARK: - Wi-Fi Monitoring
-
-    private func startWiFiMonitoring() {
-        WiFiMonitor.shared.startMonitoring()
-
-        // Check Wi-Fi every 10 seconds
-        wifiTimer = Timer.scheduledTimer(withTimeInterval: 10, repeats: true) { [weak self] _ in
-            Task { @MainActor [weak self] in
-                self?.checkWiFi()
-            }
-        }
-
-        // Check immediately
-        checkWiFi()
-    }
-
-    private func stopWiFiMonitoring() {
-        wifiTimer?.invalidate()
-        wifiTimer = nil
-        WiFiMonitor.shared.stopMonitoring()
-    }
-
-    private func checkWiFi() {
-        guard settings.wifiTriggersEnabled else {
-            if activatedByWiFi {
-                deactivateForWiFi()
-            }
-            return
-        }
-
-        let connectedTrigger = WiFiMonitor.shared.isConnectedToTriggerNetwork(triggers: settings.wifiTriggers)
-
-        if connectedTrigger != nil && !activatedByWiFi && !appState.isActive {
-            activateForWiFi(ssid: connectedTrigger!.ssid)
-        } else if connectedTrigger == nil && activatedByWiFi {
-            deactivateForWiFi()
-        }
-    }
-
-    private func activateForWiFi(ssid: String) {
-        activatedByWiFi = true
-        appState.activate(with: .indefinite)
-        caffeinateManager.start(
-            duration: nil,
-            allowDisplaySleep: settings.allowDisplaySleep,
-            reason: .wifiTrigger(ssid: ssid)
-        )
-        logger.info("Activated by Wi-Fi: \(ssid)")
-    }
-
-    private func deactivateForWiFi() {
-        guard activatedByWiFi else { return }
-        activatedByWiFi = false
-
-        if case .wifiTrigger = caffeinateManager.activationReason {
-            appState.deactivate()
-            caffeinateManager.stop()
-            logger.info("Deactivated by Wi-Fi disconnect")
         }
     }
 
