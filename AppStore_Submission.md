@@ -19,9 +19,8 @@ Keep Your Mac Awake
 
 ### Bundle ID
 ```
-com.yourcompany.AwakeApp
+thisisvision.AwakeApp
 ```
-> **Action Required:** Replace `yourcompany` with your actual company/developer name
 
 ---
 
@@ -182,38 +181,8 @@ Data Not Collected - AwakeApp does not collect any user data.
 ```
 
 ### Privacy Policy URL
-> **Action Required:** You need to host a privacy policy. Here's a template:
-
 ```
-AWAKEAPP PRIVACY POLICY
-
-Last updated: January 2026
-
-AwakeApp does not collect, store, or transmit any personal data.
-
-DATA WE DON'T COLLECT
-- Personal information
-- Usage analytics
-- Crash reports
-- Location data
-- Any other user data
-
-HOW THE APP WORKS
-AwakeApp operates entirely on your device using native macOS power management APIs (IOPMAssertion). The app monitors:
-- Running applications (to detect trigger apps like Zoom)
-- System time (to check schedules)
-- Battery level (to enforce battery protection)
-- Wi-Fi network name (to check Wi-Fi triggers)
-- Display configuration (for closed-lid mode)
-
-All of this happens locally on your device. No data leaves your Mac.
-
-APP PERMISSIONS
-- Accessibility (optional): Required only for mouse jiggler feature
-- Location (optional): Required only for Wi-Fi network detection
-- Notifications (optional): Required only for timer end alerts
-
-For questions, contact: [your email]
+https://kg54ktdvxx-gif.github.io/NoSleepPro/privacy-policy
 ```
 
 ---
@@ -222,12 +191,12 @@ For questions, contact: [your email]
 
 ### Support URL
 ```
-https://github.com/[yourusername]/AwakeApp/issues
+https://kg54ktdvxx-gif.github.io/NoSleepPro/support
 ```
 
-### Marketing URL (Optional)
+### Marketing URL
 ```
-https://[yourwebsite].com/awakeapp
+https://kg54ktdvxx-gif.github.io/NoSleepPro/
 ```
 
 ---
@@ -397,17 +366,17 @@ No network access required (except for Wi-Fi SSID detection).
 
 ## Checklist Before Submission
 
-- [ ] Update Bundle Identifier to your real ID
-- [ ] Set your Development Team in Xcode
-- [ ] Add App Sandbox capability in Xcode
-- [ ] Configure code signing entitlements
-- [ ] Create and host Privacy Policy
+- [x] Update Bundle Identifier (thisisvision.AwakeApp)
+- [x] Set your Development Team in Xcode (ML4L5QJ99D)
+- [x] Add App Sandbox capability in Xcode
+- [x] Configure code signing entitlements
+- [x] Create and host Privacy Policy (GitHub Pages)
 - [ ] Take all required screenshots (5)
 - [ ] Record app preview video (optional but recommended)
 - [ ] Create App Store Connect listing
 - [ ] Set price ($2.99 suggested)
 - [ ] Archive and upload build
-- [ ] Run all tests pass (200+ tests)
+- [ ] Run all tests pass (138 tests)
 - [ ] Submit for review
 
 ---
