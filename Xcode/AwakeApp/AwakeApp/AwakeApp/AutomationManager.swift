@@ -3,7 +3,7 @@
 //  AwakeApp
 //
 //  Handles automatic activation via app triggers, schedules, battery monitoring, keyboard shortcuts,
-//  hardware triggers, and mouse jiggler
+//  and hardware triggers
 //
 
 import Foundation
@@ -65,10 +65,14 @@ final class AutomationManager: ObservableObject {
         settings.objectWillChange
             .sink { [weak self] _ in
                 Task { @MainActor [weak self] in
-                    self?.updateMouseJiggler()
+                    self?.onSettingsChanged()
                 }
             }
             .store(in: &cancellables)
+    }
+
+    private func onSettingsChanged() {
+        // Re-evaluate automation rules when settings change
     }
 
     /// Start all automation monitoring
@@ -78,7 +82,6 @@ final class AutomationManager: ObservableObject {
         startBatteryMonitoring()
         startHardwareMonitoring()
         setupKeyboardShortcut()
-        updateMouseJiggler()
 
         // Initialize hardware state
         wasOnPower = !CaffeinateManager.isOnBattery()
@@ -94,7 +97,6 @@ final class AutomationManager: ObservableObject {
         stopBatteryMonitoring()
         stopHardwareMonitoring()
         removeKeyboardShortcut()
-        MouseJiggler.shared.stop()
 
         logger.info("Automation monitoring stopped")
     }
@@ -448,18 +450,8 @@ final class AutomationManager: ObservableObject {
         }
     }
 
-    // MARK: - Mouse Jiggler
-
-    private func updateMouseJiggler() {
-        if settings.mouseJigglerEnabled && appState.isActive {
-            MouseJiggler.shared.start(intervalSeconds: settings.mouseJigglerInterval)
-        } else {
-            MouseJiggler.shared.stop()
-        }
-    }
-
-    /// Called when app state changes to update mouse jiggler
+    /// Called when app state changes
     func onAppStateChanged() {
-        updateMouseJiggler()
+        // Re-evaluate automation rules when app state changes
     }
 }

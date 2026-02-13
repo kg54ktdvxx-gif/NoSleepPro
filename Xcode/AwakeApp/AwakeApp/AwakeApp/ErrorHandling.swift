@@ -13,43 +13,16 @@ private let logger = Logger(subsystem: "com.awakeapp", category: "Error")
 
 // MARK: - App Error Types
 
-/// Errors related to mouse jiggler
-enum MouseJigglerError: LocalizedError {
-    case noAccessibilityPermission
-    case eventCreationFailed
-    case positionUnavailable
-
-    var errorDescription: String? {
-        switch self {
-        case .noAccessibilityPermission:
-            return "Accessibility permission required"
-        case .eventCreationFailed:
-            return "Failed to create mouse movement event"
-        case .positionUnavailable:
-            return "Unable to get current mouse position"
-        }
-    }
-
-    var recoverySuggestion: String? {
-        switch self {
-        case .noAccessibilityPermission:
-            return "Open System Settings > Privacy & Security > Accessibility and enable No Sleep Pro."
-        case .eventCreationFailed, .positionUnavailable:
-            return "Try restarting the app."
-        }
-    }
-}
-
 /// Errors related to keyboard shortcuts
 enum KeyboardShortcutError: LocalizedError {
-    case monitoringFailed
+    case registrationFailed
     case invalidShortcut
     case shortcutConflict(existingApp: String?)
 
     var errorDescription: String? {
         switch self {
-        case .monitoringFailed:
-            return "Failed to monitor keyboard events"
+        case .registrationFailed:
+            return "Failed to register keyboard shortcut"
         case .invalidShortcut:
             return "Invalid keyboard shortcut"
         case .shortcutConflict(let app):
@@ -62,8 +35,8 @@ enum KeyboardShortcutError: LocalizedError {
 
     var recoverySuggestion: String? {
         switch self {
-        case .monitoringFailed:
-            return "Grant accessibility permission in System Settings."
+        case .registrationFailed:
+            return "The shortcut may conflict with another app. Try a different key combination."
         case .invalidShortcut:
             return "Choose a different key combination with Command or Control."
         case .shortcutConflict:

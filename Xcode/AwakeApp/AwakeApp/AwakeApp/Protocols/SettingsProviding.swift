@@ -33,10 +33,6 @@ protocol SettingsProviding: AnyObject {
     var deactivateOnBattery: Bool { get set }
     var activateOnExternalDisplay: Bool { get set }
 
-    // MARK: - Mouse Jiggler
-    var mouseJigglerEnabled: Bool { get set }
-    var mouseJigglerInterval: Double { get set }
-
     // MARK: - Menu Bar
     var menuBarIconStyle: MenuBarIconStyle { get set }
 

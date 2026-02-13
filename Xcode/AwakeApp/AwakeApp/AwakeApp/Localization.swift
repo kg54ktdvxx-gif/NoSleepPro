@@ -92,15 +92,6 @@ enum L10n {
             static let pressShortcut = "settings.press_shortcut".localized
         }
 
-        enum Jiggler {
-            static let title = "settings.mouse_jiggler".localized
-            static let enable = "settings.enable_jiggler".localized
-            static let interval = "settings.jiggle_interval".localized
-            static let description = "settings.jiggler_description".localized
-            static let accessibilityGranted = "settings.accessibility_granted".localized
-            static let accessibilityRequired = "settings.accessibility_required".localized
-        }
-
         enum Battery {
             static let protection = "settings.battery_protection".localized
             static let enable = "settings.enable_battery".localized

@@ -10,35 +10,13 @@ import XCTest
 
 final class ErrorHandlingIntegrationTests: XCTestCase {
 
-    // MARK: - Mouse Jiggler Error Tests
-
-    func testMouseJigglerErrorAccessibility() {
-        let error = MouseJigglerError.noAccessibilityPermission
-
-        XCTAssertEqual(error.errorDescription, "Accessibility permission required")
-        XCTAssertTrue(error.recoverySuggestion?.contains("System Settings") ?? false)
-    }
-
-    func testMouseJigglerErrorEventCreation() {
-        let error = MouseJigglerError.eventCreationFailed
-
-        XCTAssertEqual(error.errorDescription, "Failed to create mouse movement event")
-        XCTAssertNotNil(error.recoverySuggestion)
-    }
-
-    func testMouseJigglerErrorPosition() {
-        let error = MouseJigglerError.positionUnavailable
-
-        XCTAssertEqual(error.errorDescription, "Unable to get current mouse position")
-    }
-
     // MARK: - Keyboard Shortcut Error Tests
 
-    func testKeyboardShortcutErrorMonitoring() {
-        let error = KeyboardShortcutError.monitoringFailed
+    func testKeyboardShortcutErrorRegistration() {
+        let error = KeyboardShortcutError.registrationFailed
 
-        XCTAssertEqual(error.errorDescription, "Failed to monitor keyboard events")
-        XCTAssertTrue(error.recoverySuggestion?.contains("accessibility") ?? false)
+        XCTAssertEqual(error.errorDescription, "Failed to register keyboard shortcut")
+        XCTAssertTrue(error.recoverySuggestion?.contains("shortcut") ?? false)
     }
 
     func testKeyboardShortcutErrorInvalid() {
@@ -70,23 +48,6 @@ final class ErrorHandlingIntegrationTests: XCTestCase {
 
     // MARK: - Error Recovery Flow Tests
 
-    func testMouseJigglerPermissionRecoveryFlow() {
-        var lastError: MouseJigglerError? = .noAccessibilityPermission
-        var hasPermission = false
-        var isRunning = false
-
-        // Simulate: user grants permission in System Settings
-        hasPermission = true
-
-        if hasPermission {
-            lastError = nil
-            isRunning = true
-        }
-
-        XCTAssertNil(lastError)
-        XCTAssertTrue(isRunning)
-    }
-
     func testClosedLidRequirementRecoveryFlow() {
         var lastError: ClosedLidError? = .noPowerConnected
         var isEnabled = false
@@ -113,71 +74,16 @@ final class ErrorHandlingIntegrationTests: XCTestCase {
         XCTAssertTrue(isEnabled)
     }
 
-    // MARK: - Consecutive Failure Tests
-
-    func testMouseJigglerConsecutiveFailures() {
-        var consecutiveFailures = 0
-        let maxFailures = 3
-        var isRunning = true
-        var shouldStop = false
-
-        // Simulate 3 consecutive failures
-        for _ in 0..<3 {
-            consecutiveFailures += 1
-
-            if consecutiveFailures >= maxFailures {
-                shouldStop = true
-                isRunning = false
-            }
-        }
-
-        XCTAssertTrue(shouldStop)
-        XCTAssertFalse(isRunning)
-        XCTAssertEqual(consecutiveFailures, 3)
-    }
-
-    func testMouseJigglerSuccessResetsFailureCount() {
-        var consecutiveFailures = 2
-
-        // Successful jiggle
-        let success = true
-        if success {
-            consecutiveFailures = 0
-        }
-
-        XCTAssertEqual(consecutiveFailures, 0)
-    }
-
     // MARK: - Error Display Logic Tests
 
     func testCriticalErrorsShouldDisplay() {
         // Critical errors should display to user
-        let criticalErrors: [(error: MouseJigglerError, shouldDisplay: Bool)] = [
-            (.noAccessibilityPermission, true)
+        let criticalErrors: [(error: KeyboardShortcutError, shouldDisplay: Bool)] = [
+            (.registrationFailed, true)
         ]
 
         for (_, shouldDisplay) in criticalErrors {
             XCTAssertTrue(shouldDisplay)
         }
-    }
-
-    // MARK: - Error State Cleanup Tests
-
-    func testErrorPersistsUntilResolved() {
-        var lastError: MouseJigglerError? = .noAccessibilityPermission
-        var hasPermission = false
-
-        // Attempt operation without fixing issue
-        if !hasPermission {
-            // Error persists
-        }
-
-        XCTAssertNotNil(lastError)
-
-        // Fix issue
-        hasPermission = true
-        lastError = nil
-
-        XCTAssertNil(lastError)
     }
 }

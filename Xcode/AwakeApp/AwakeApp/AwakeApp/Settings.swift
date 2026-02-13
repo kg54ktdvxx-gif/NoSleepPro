@@ -141,14 +141,6 @@ final class AppSettings: ObservableObject {
 
     @AppStorage("launchAtLogin") var launchAtLogin: Bool = false
 
-    // MARK: - Mouse Jiggler
-
-    /// Enable mouse jiggler to prevent "Away" status
-    @AppStorage("mouseJigglerEnabled") var mouseJigglerEnabled: Bool = false
-
-    /// Mouse jiggler interval in seconds
-    @AppStorage("mouseJigglerInterval") var mouseJigglerInterval: Double = 60
-
     // MARK: - Menu Bar Appearance
 
     /// Menu bar icon style

@@ -113,47 +113,6 @@ struct GeneralSettingsTab: View {
                 Text("Keyboard Shortcut")
             }
 
-            Section {
-                Toggle("Enable mouse jiggler", isOn: $settings.mouseJigglerEnabled)
-                    .help("Periodically move mouse to prevent 'Away' status in chat apps")
-                    .accessibilityHint("Periodically move mouse to prevent Away status in chat apps")
-
-                if settings.mouseJigglerEnabled {
-                    Picker("Jiggle interval:", selection: $settings.mouseJigglerInterval) {
-                        ForEach(MouseJiggler.availableIntervals, id: \.seconds) { interval in
-                            Text(interval.label).tag(interval.seconds)
-                        }
-                    }
-
-                    // Accessibility permission status
-                    HStack {
-                        if MouseJiggler.shared.hasAccessibilityPermission {
-                            Image(systemName: "checkmark.circle.fill")
-                                .foregroundColor(.green)
-                            Text("Accessibility permission granted")
-                                .foregroundColor(.secondary)
-                        } else {
-                            Image(systemName: "exclamationmark.triangle.fill")
-                                .foregroundColor(.orange)
-                            Text("Accessibility permission required")
-                                .foregroundColor(.secondary)
-                            Spacer()
-                            Button("Grant") {
-                                MouseJiggler.shared.requestAccessibilityPermission()
-                            }
-                            .buttonStyle(.borderedProminent)
-                            .controlSize(.small)
-                        }
-                    }
-                    .font(.caption)
-                }
-            } header: {
-                Text("Mouse Jiggler")
-            } footer: {
-                Text("Moves the cursor slightly to prevent apps like Slack or Teams from marking you as 'Away'.")
-                    .font(.caption)
-                    .foregroundColor(.secondary)
-            }
         }
         .formStyle(.grouped)
         .padding()

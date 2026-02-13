@@ -2,7 +2,8 @@
 //  KeyboardShortcutManager.swift
 //  AwakeApp
 //
-//  Manages global keyboard shortcuts with customizable key combinations
+//  Manages global keyboard shortcuts using Carbon RegisterEventHotKey API.
+//  This approach does NOT require accessibility permissions and is App Store approved.
 //
 
 import Foundation
@@ -40,6 +41,19 @@ struct KeyboardShortcut: Codable, Equatable {
         }
 
         return parts.joined()
+    }
+
+    /// Convert NSEvent modifier flags to Carbon modifier flags
+    var carbonModifiers: UInt32 {
+        var carbonMods: UInt32 = 0
+        let flags = NSEvent.ModifierFlags(rawValue: modifiers)
+
+        if flags.contains(.command) { carbonMods |= UInt32(cmdKey) }
+        if flags.contains(.option) { carbonMods |= UInt32(optionKey) }
+        if flags.contains(.control) { carbonMods |= UInt32(controlKey) }
+        if flags.contains(.shift) { carbonMods |= UInt32(shiftKey) }
+
+        return carbonMods
     }
 
     /// Convert key code to string representation
@@ -104,6 +118,19 @@ struct KeyboardShortcut: Codable, Equatable {
     }
 }
 
+// MARK: - Carbon Hotkey ID
+
+/// Unique hotkey signature for this app
+private let kHotKeySignature: FourCharCode = {
+    let chars: [UInt8] = [0x4E, 0x53, 0x4C, 0x50] // "NSLP" for No Sleep Pro
+    return FourCharCode(chars[0]) << 24 | FourCharCode(chars[1]) << 16 | FourCharCode(chars[2]) << 8 | FourCharCode(chars[3])
+}()
+
+private let kHotKeyID: UInt32 = 1
+
+/// Global reference to the shared manager for the Carbon callback
+private weak var _sharedManager: KeyboardShortcutManager?
+
 @MainActor
 class KeyboardShortcutManager: ObservableObject {
     static let shared = KeyboardShortcutManager()
@@ -113,7 +140,8 @@ class KeyboardShortcutManager: ObservableObject {
     @Published var isListening = false
     @Published var lastError: KeyboardShortcutError?
 
-    private var globalMonitor: Any?
+    private var hotKeyRef: EventHotKeyRef?
+    private var eventHandlerRef: EventHandlerRef?
     private var localMonitor: Any?
     private var recordingCallback: ((KeyboardShortcut) -> Void)?
 
@@ -121,36 +149,23 @@ class KeyboardShortcutManager: ObservableObject {
 
     private init() {
         loadShortcut()
+        _sharedManager = self
     }
 
-    /// Start listening for the global keyboard shortcut
+    /// Start listening for the global keyboard shortcut using Carbon API
     /// - Returns: Result indicating success or failure
     @discardableResult
     func startListening() -> Result<Void, KeyboardShortcutError> {
         stopListening()
         lastError = nil
 
-        // Global monitor (when app is not focused)
-        globalMonitor = NSEvent.addGlobalMonitorForEvents(matching: .keyDown) { [weak self] event in
-            Task { @MainActor in
-                self?.handleKeyEvent(event)
-            }
-        }
+        // Register the Carbon hotkey
+        let result = registerCarbonHotKey()
 
-        // Local monitor (when app is focused)
-        localMonitor = NSEvent.addLocalMonitorForEvents(matching: .keyDown) { [weak self] event in
-            Task { @MainActor in
-                self?.handleKeyEvent(event)
-            }
-            return event
-        }
-
-        // Check if monitors were created successfully
-        if globalMonitor == nil && localMonitor == nil {
-            let error = KeyboardShortcutError.monitoringFailed
+        if case .failure(let error) = result {
             lastError = error
             isListening = false
-            logger.error("Failed to start keyboard monitoring")
+            logger.error("Failed to register hotkey: \(error.localizedDescription)")
             return .failure(error)
         }
 
@@ -161,67 +176,170 @@ class KeyboardShortcutManager: ObservableObject {
 
     /// Stop listening for keyboard shortcuts
     func stopListening() {
-        if let monitor = globalMonitor {
-            NSEvent.removeMonitor(monitor)
-            globalMonitor = nil
-        }
+        unregisterCarbonHotKey()
+
         if let monitor = localMonitor {
             NSEvent.removeMonitor(monitor)
             localMonitor = nil
         }
+
         isListening = false
-    }
-
-    /// Handle incoming key event
-    private func handleKeyEvent(_ event: NSEvent) {
-        // If recording a new shortcut
-        if isRecording {
-            let modifiers = event.modifierFlags.intersection(.deviceIndependentFlagsMask)
-
-            // Require at least Command or Control
-            guard modifiers.contains(.command) || modifiers.contains(.control) else { return }
-
-            let newShortcut = KeyboardShortcut(
-                keyCode: event.keyCode,
-                modifiers: modifiers.rawValue
-            )
-
-            currentShortcut = newShortcut
-            saveShortcut()
-            isRecording = false
-            recordingCallback?(newShortcut)
-            recordingCallback = nil
-
-            logger.info("New shortcut recorded: \(newShortcut.displayString)")
-            return
-        }
-
-        // Check if event matches our shortcut
-        let modifiers = event.modifierFlags.intersection(.deviceIndependentFlagsMask)
-        let expectedModifiers = NSEvent.ModifierFlags(rawValue: currentShortcut.modifiers)
-
-        if event.keyCode == currentShortcut.keyCode && modifiers == expectedModifiers {
-            logger.info("Shortcut triggered: \(self.currentShortcut.displayString)")
-            onToggle?()
-        }
     }
 
     /// Start recording a new shortcut
     func startRecording(completion: @escaping (KeyboardShortcut) -> Void) {
         isRecording = true
         recordingCallback = completion
+
+        // Use a local monitor to capture the next keypress while recording
+        localMonitor = NSEvent.addLocalMonitorForEvents(matching: .keyDown) { [weak self] event in
+            Task { @MainActor in
+                self?.handleRecordingEvent(event)
+            }
+            return nil // Consume the event during recording
+        }
     }
 
     /// Cancel recording
     func cancelRecording() {
         isRecording = false
         recordingCallback = nil
+
+        if let monitor = localMonitor {
+            NSEvent.removeMonitor(monitor)
+            localMonitor = nil
+        }
     }
 
     /// Reset to default shortcut
     func resetToDefault() {
+        let wasListening = isListening
+        if wasListening { stopListening() }
+
         currentShortcut = .default
         saveShortcut()
+
+        if wasListening { startListening() }
+    }
+
+    // MARK: - Carbon Hotkey Registration
+
+    private func registerCarbonHotKey() -> Result<Void, KeyboardShortcutError> {
+        // Install event handler if not already installed
+        if eventHandlerRef == nil {
+            var eventType = EventTypeSpec(
+                eventClass: OSType(kEventClassKeyboard),
+                eventKind: UInt32(kEventHotKeyPressed)
+            )
+
+            let handler: EventHandlerUPP = { _, event, _ -> OSStatus in
+                guard let event = event else { return OSStatus(eventNotHandledErr) }
+
+                var hotKeyID = EventHotKeyID()
+                let result = GetEventParameter(
+                    event,
+                    UInt32(kEventParamDirectObject),
+                    UInt32(typeEventHotKeyID),
+                    nil,
+                    MemoryLayout<EventHotKeyID>.size,
+                    nil,
+                    &hotKeyID
+                )
+
+                guard result == noErr else {
+                    return OSStatus(eventNotHandledErr)
+                }
+
+                DispatchQueue.main.async {
+                    _sharedManager?.hotKeyPressed()
+                }
+
+                return noErr
+            }
+
+            let status = InstallEventHandler(
+                GetApplicationEventTarget(),
+                handler,
+                1,
+                &eventType,
+                nil,
+                &eventHandlerRef
+            )
+
+            guard status == noErr else {
+                return .failure(.registrationFailed)
+            }
+        }
+
+        // Register the hotkey
+        let hotKeyID = EventHotKeyID(signature: kHotKeySignature, id: kHotKeyID)
+
+        let status = RegisterEventHotKey(
+            UInt32(currentShortcut.keyCode),
+            currentShortcut.carbonModifiers,
+            hotKeyID,
+            GetApplicationEventTarget(),
+            0,
+            &hotKeyRef
+        )
+
+        guard status == noErr else {
+            return .failure(.registrationFailed)
+        }
+
+        return .success(())
+    }
+
+    private func unregisterCarbonHotKey() {
+        if let hotKeyRef = hotKeyRef {
+            UnregisterEventHotKey(hotKeyRef)
+            self.hotKeyRef = nil
+        }
+    }
+
+    // MARK: - Event Handling
+
+    /// Called from the Carbon callback when the hotkey is pressed
+    fileprivate func hotKeyPressed() {
+        guard !isRecording else { return }
+
+        logger.info("Shortcut triggered: \(self.currentShortcut.displayString)")
+        onToggle?()
+    }
+
+    /// Handle key event during shortcut recording
+    private func handleRecordingEvent(_ event: NSEvent) {
+        guard isRecording else { return }
+
+        let modifiers = event.modifierFlags.intersection(.deviceIndependentFlagsMask)
+
+        // Require at least Command or Control
+        guard modifiers.contains(.command) || modifiers.contains(.control) else { return }
+
+        let newShortcut = KeyboardShortcut(
+            keyCode: event.keyCode,
+            modifiers: modifiers.rawValue
+        )
+
+        // Stop recording
+        if let monitor = localMonitor {
+            NSEvent.removeMonitor(monitor)
+            localMonitor = nil
+        }
+
+        // Re-register with new shortcut
+        let wasListening = isListening
+        if wasListening { stopListening() }
+
+        currentShortcut = newShortcut
+        saveShortcut()
+        isRecording = false
+        recordingCallback?(newShortcut)
+        recordingCallback = nil
+
+        if wasListening { startListening() }
+
+        logger.info("New shortcut recorded: \(newShortcut.displayString)")
     }
 
     // MARK: - Persistence
@@ -239,3 +357,4 @@ class KeyboardShortcutManager: ObservableObject {
         }
     }
 }
+

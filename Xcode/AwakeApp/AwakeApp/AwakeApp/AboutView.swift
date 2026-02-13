@@ -223,7 +223,7 @@ struct TipsAndTricksTabContent: View {
                 TipRow(number: 3, tip: "Enable battery protection for automatic safety")
                 TipRow(number: 4, tip: "Create schedules for your regular work hours")
                 TipRow(number: 5, tip: "Show countdown in menu bar for quick glance")
-                TipRow(number: 6, tip: "Use mouse jiggler to prevent 'Away' status")
+                TipRow(number: 6, tip: "Use hardware triggers for automatic activation")
             }
             .padding(.horizontal, 24)
             .padding(.vertical, 16)

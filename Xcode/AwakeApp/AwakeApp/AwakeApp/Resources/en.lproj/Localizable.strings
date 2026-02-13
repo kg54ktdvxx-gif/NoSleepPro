@@ -69,14 +69,6 @@
 "settings.press_shortcut" = "Press shortcut...";
 "settings.reset_default" = "Reset to default";
 
-// MARK: - Mouse Jiggler Settings
-"settings.mouse_jiggler" = "Mouse Jiggler";
-"settings.enable_jiggler" = "Enable mouse jiggler";
-"settings.jiggle_interval" = "Jiggle interval:";
-"settings.jiggler_description" = "Moves the cursor slightly to prevent apps like Slack or Teams from marking you as 'Away'.";
-"settings.accessibility_granted" = "Accessibility permission granted";
-"settings.accessibility_required" = "Accessibility permission required";
-
 // MARK: - Battery Settings
 "settings.battery_protection" = "Battery Protection";
 "settings.enable_battery" = "Enable battery protection";
@@ -132,7 +124,7 @@
 
 // MARK: - Warnings & Errors
 "warning.battery_stopped" = "Stopped to preserve battery";
-"error.accessibility_required" = "Accessibility permission required";
+"error.shortcut_registration_failed" = "Failed to register keyboard shortcut";
 
 // MARK: - About View
 "about.title" = "About AwakeApp";

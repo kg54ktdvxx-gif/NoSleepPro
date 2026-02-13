@@ -2,7 +2,7 @@
 //  ShortcutManaging.swift
 //  AwakeApp
 //
-//  Protocol for keyboard shortcuts - enables testing without NSEvent
+//  Protocol for keyboard shortcuts - enables testing with mock implementations
 //
 
 import Foundation

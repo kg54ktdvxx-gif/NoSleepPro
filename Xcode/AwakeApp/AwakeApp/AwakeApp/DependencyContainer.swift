@@ -36,9 +36,6 @@ final class DependencyContainer {
 
     // MARK: - Utility Services
 
-    /// Mouse jiggler
-    let mouseJiggler: MouseJiggler
-
     /// Notification manager
     let notificationManager: NotificationManager
 
@@ -58,7 +55,6 @@ final class DependencyContainer {
         self.appState = AppState()
         self.caffeinateManager = CaffeinateManager()
         self.settings = AppSettings.shared
-        self.mouseJiggler = MouseJiggler.shared
         self.notificationManager = NotificationManager.shared
         self.keyboardShortcutManager = KeyboardShortcutManager.shared
         self.windowManager = WindowManager.shared
@@ -78,7 +74,6 @@ final class DependencyContainer {
         appState: AppState,
         caffeinateManager: CaffeinateManager,
         settings: AppSettings,
-        mouseJiggler: MouseJiggler,
         notificationManager: NotificationManager,
         keyboardShortcutManager: KeyboardShortcutManager,
         windowManager: WindowManager,
@@ -88,7 +83,6 @@ final class DependencyContainer {
         self.appState = appState
         self.caffeinateManager = caffeinateManager
         self.settings = settings
-        self.mouseJiggler = mouseJiggler
         self.notificationManager = notificationManager
         self.keyboardShortcutManager = keyboardShortcutManager
         self.windowManager = windowManager
