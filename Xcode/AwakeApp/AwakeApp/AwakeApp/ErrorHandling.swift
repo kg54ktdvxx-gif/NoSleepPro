@@ -9,7 +9,7 @@ import Foundation
 import Combine
 import os.log
 
-private let logger = Logger(subsystem: "com.awakeapp", category: "Error")
+private let logger = Logger(subsystem: Bundle.main.bundleIdentifier ?? "thisisvision.AwakeApp", category: "Error")
 
 // MARK: - App Error Types
 
@@ -121,44 +121,3 @@ extension Result where Failure: LocalizedError {
     }
 }
 
-// MARK: - Safe Execution
-
-/// Execute a throwing closure and handle errors gracefully
-@MainActor
-func safeExecute<T>(
-    _ operation: () throws -> T,
-    onError: ((Error) -> Void)? = nil,
-    defaultValue: T? = nil
-) -> T? {
-    do {
-        return try operation()
-    } catch let error as any LocalizedError {
-        ErrorHandler.shared.handle(error)
-        onError?(error)
-        return defaultValue
-    } catch {
-        logger.error("Unexpected error: \(error.localizedDescription)")
-        onError?(error)
-        return defaultValue
-    }
-}
-
-/// Execute an async throwing closure and handle errors gracefully
-@MainActor
-func safeExecuteAsync<T>(
-    _ operation: () async throws -> T,
-    onError: ((Error) -> Void)? = nil,
-    defaultValue: T? = nil
-) async -> T? {
-    do {
-        return try await operation()
-    } catch let error as any LocalizedError {
-        ErrorHandler.shared.handle(error)
-        onError?(error)
-        return defaultValue
-    } catch {
-        logger.error("Unexpected error: \(error.localizedDescription)")
-        onError?(error)
-        return defaultValue
-    }
-}

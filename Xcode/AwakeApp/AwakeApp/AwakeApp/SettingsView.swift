@@ -81,13 +81,22 @@ struct GeneralSettingsTab: View {
                 Toggle("Launch at login", isOn: $settings.launchAtLogin)
                     .help("Automatically start No Sleep Pro when you log in")
                     .accessibilityHint("Automatically start No Sleep Pro when you log in")
+                    .onChange(of: settings.launchAtLogin) { _, enabled in
+                        settings.syncLaunchAtLogin(enabled)
+                    }
             } header: {
                 Text("Display Options")
             }
 
             Section {
                 Toggle("Notify when timer ends", isOn: $settings.notifyOnTimerEnd)
+                    .onChange(of: settings.notifyOnTimerEnd) { oldValue, newValue in
+                        if newValue && !oldValue { Task { await NotificationManager.shared.requestPermission() } }
+                    }
                 Toggle("Notify on battery protection", isOn: $settings.notifyOnBatteryStop)
+                    .onChange(of: settings.notifyOnBatteryStop) { oldValue, newValue in
+                        if newValue && !oldValue { Task { await NotificationManager.shared.requestPermission() } }
+                    }
             } header: {
                 Text("Notifications")
             }

@@ -6,7 +6,7 @@
 */
 
 // MARK: - App General
-"app.name" = "AwakeApp";
+"app.name" = "No Sleep Pro";
 "app.tagline" = "Keep your Mac awake";
 
 // MARK: - Menu Bar
@@ -38,7 +38,7 @@
 "action.start" = "Start";
 "action.cancel" = "Cancel";
 "action.add" = "Add";
-"action.quit" = "Quit AwakeApp";
+"action.quit" = "Quit No Sleep Pro";
 "action.grant" = "Grant";
 "action.reset" = "Reset";
 
@@ -127,7 +127,7 @@
 "error.shortcut_registration_failed" = "Failed to register keyboard shortcut";
 
 // MARK: - About View
-"about.title" = "About AwakeApp";
+"about.title" = "About No Sleep Pro";
 "about.version" = "Version %@";
 "about.description" = "A simple, elegant utility to prevent your Mac from sleeping.";
 "about.features" = "Features";

@@ -12,7 +12,7 @@ import Carbon.HIToolbox
 import AppKit
 import os.log
 
-private let logger = Logger(subsystem: "com.awakeapp", category: "KeyboardShortcut")
+private let logger = Logger(subsystem: Bundle.main.bundleIdentifier ?? "thisisvision.AwakeApp", category: "KeyboardShortcut")
 
 /// Represents a keyboard shortcut combination
 struct KeyboardShortcut: Codable, Equatable {
@@ -176,7 +176,13 @@ class KeyboardShortcutManager: ObservableObject {
 
     /// Stop listening for keyboard shortcuts
     func stopListening() {
+        // Remove in reverse order of registration: hotkey first, then handler
         unregisterCarbonHotKey()
+
+        if let handler = eventHandlerRef {
+            RemoveEventHandler(handler)
+            eventHandlerRef = nil
+        }
 
         if let monitor = localMonitor {
             NSEvent.removeMonitor(monitor)

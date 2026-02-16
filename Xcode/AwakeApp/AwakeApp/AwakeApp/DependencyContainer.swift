@@ -95,6 +95,13 @@ final class DependencyContainer {
     /// Start all monitoring services - call at app launch
     func startServices() {
         automationManager.startMonitoring()
+
+        // Request notification permission if notification settings are enabled and not already granted
+        if (settings.notifyOnTimerEnd || settings.notifyOnBatteryStop) && !notificationManager.hasPermission {
+            Task {
+                await notificationManager.requestPermission()
+            }
+        }
     }
 
     /// Stop all monitoring services - call at app termination

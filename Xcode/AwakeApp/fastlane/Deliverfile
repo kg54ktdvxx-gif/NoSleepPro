@@ -3,7 +3,7 @@
 
 # App metadata
 app_identifier("thisisvision.AwakeApp")
-username("your@email.com") # Your Apple ID email
+username("owenmcloughlin1@gmail.com")
 
 # Pricing
 price_tier(3) # $2.99 USD

@@ -57,6 +57,8 @@ build/
 *.env
 secrets.json
 credentials.json
+*.p8
+fastlane/keys/
 
 # Logs
 *.log

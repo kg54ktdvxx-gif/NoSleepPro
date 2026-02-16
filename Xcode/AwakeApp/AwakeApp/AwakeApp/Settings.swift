@@ -8,6 +8,7 @@
 import Foundation
 import SwiftUI
 import Combine
+import ServiceManagement
 
 /// Schedule entry for automatic activation
 struct ScheduleEntry: Codable, Identifiable, Equatable {
@@ -140,6 +141,25 @@ final class AppSettings: ObservableObject {
     // MARK: - Launch at Login
 
     @AppStorage("launchAtLogin") var launchAtLogin: Bool = false
+
+    /// Sync launch-at-login setting with SMAppService.
+    /// Call from .onChange(of: settings.launchAtLogin) in the view.
+    func syncLaunchAtLogin(_ enabled: Bool) {
+        do {
+            if enabled {
+                try SMAppService.mainApp.register()
+            } else {
+                // Only unregister if currently registered
+                if SMAppService.mainApp.status == .enabled {
+                    try SMAppService.mainApp.unregister()
+                }
+            }
+        } catch {
+            // Revert the toggle so UI matches actual system state
+            launchAtLogin = !enabled
+            print("Launch at login failed: \(error.localizedDescription)")
+        }
+    }
 
     // MARK: - Menu Bar Appearance
 

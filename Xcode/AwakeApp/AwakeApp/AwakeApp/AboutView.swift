@@ -66,7 +66,7 @@ struct AboutView: View {
             VStack(spacing: 10) {
                 Divider()
 
-                Text("Made in Singapore")
+                Text("Made with ❤️ + 🤖 in 🇸🇬")
                     .font(.system(size: 11))
                     .foregroundColor(.secondary)
 

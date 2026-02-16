@@ -11,7 +11,7 @@ import AppKit
 import Combine
 import os.log
 
-private let logger = Logger(subsystem: "com.awakeapp", category: "Automation")
+private let logger = Logger(subsystem: Bundle.main.bundleIdentifier ?? "thisisvision.AwakeApp", category: "Automation")
 
 @MainActor
 final class AutomationManager: ObservableObject {

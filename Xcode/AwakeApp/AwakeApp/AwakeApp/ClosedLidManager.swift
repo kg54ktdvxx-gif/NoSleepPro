@@ -15,7 +15,7 @@ import IOKit.ps
 import AppKit
 import os.log
 
-private let logger = Logger(subsystem: "com.awakeapp", category: "ClosedLid")
+private let logger = Logger(subsystem: Bundle.main.bundleIdentifier ?? "thisisvision.AwakeApp", category: "ClosedLid")
 
 /// Errors related to closed-lid mode
 enum ClosedLidError: LocalizedError, Equatable {

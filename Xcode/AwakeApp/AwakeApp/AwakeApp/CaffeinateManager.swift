@@ -13,7 +13,7 @@ import IOKit.ps
 import os.log
 
 /// Logger for power management events
-private let logger = Logger(subsystem: "com.awakeapp", category: "PowerManagement")
+private let logger = Logger(subsystem: Bundle.main.bundleIdentifier ?? "thisisvision.AwakeApp", category: "PowerManagement")
 
 /// Error types for power management operations
 enum PowerManagementError: LocalizedError {

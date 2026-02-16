@@ -410,7 +410,7 @@ struct MenuBarView: View {
             }
             .keyboardShortcut(",", modifiers: .command)
             .accessibilityLabel("Settings")
-            .accessibilityHint("Open No Sleep Pro settings. Command comma.")
+            .accessibilityHint("Open settings")
 
             // About button
             Button(action: {
@@ -481,7 +481,6 @@ struct MenuBarView: View {
         }
         .frame(width: 340)
         .background(Color(nsColor: .windowBackgroundColor))
-        // Note: Monitoring now starts from DependencyContainer at app launch
     }
 
     // MARK: - Subviews

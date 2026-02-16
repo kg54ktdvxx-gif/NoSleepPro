@@ -51,7 +51,7 @@ final class AppState: ObservableObject {
                 guard let self = self,
                       let expiration = self.expirationDate else { return }
 
-                let remaining = Int(expiration.timeIntervalSinceNow)
+                let remaining = max(0, Int(expiration.timeIntervalSinceNow))
 
                 if remaining <= 0 {
                     self.deactivate()
