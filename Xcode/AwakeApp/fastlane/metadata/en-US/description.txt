@@ -14,9 +14,6 @@ Set it and forget it. No Sleep Pro can activate automatically based on:
 CLOSED-LID MODE
 Keep your Mac running with the lid closed when connected to an external display and power. Perfect for desktop setups using your MacBook as a workstation.
 
-MOUSE JIGGLER
-Prevent "Away" status in Slack, Teams, and other messaging apps. The cursor moves one pixel at configurable intervals — completely invisible during normal use.
-
 BATTERY PROTECTION
 No Sleep Pro watches your battery level and automatically stops when it drops below your chosen threshold (10–30%). Your laptop is always protected from draining to zero.
 

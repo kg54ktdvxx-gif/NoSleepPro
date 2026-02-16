@@ -1,4 +1,4 @@
-No Sleep Pro is a menu bar utility that prevents macOS from sleeping. It does not require login or account creation.
+No Sleep Pro is a menu bar utility that prevents macOS from sleeping. It does not require login or account creation. No Accessibility permissions are required.
 
 To test:
 1. Launch the app — it appears as an icon in the menu bar (no Dock icon).
@@ -7,9 +7,10 @@ To test:
 4. The icon fills and a countdown appears.
 5. Click "Stop" or let the timer expire to deactivate.
 
-Optional features requiring Accessibility permission (System Settings > Privacy & Security > Accessibility):
-- Mouse Jiggler: Enable in Settings > General
-- Global Keyboard Shortcut: Enable in Settings > General
+Keyboard Shortcut (Settings > General):
+- Enable the keyboard shortcut toggle
+- Press ⌘⇧A (default) from any app to toggle sleep prevention
+- Uses Carbon RegisterEventHotKey API (no Accessibility permission needed)
 
 Automation features (Settings > Automation tab):
 - Battery Protection: Auto-stops at configurable battery threshold

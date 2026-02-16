@@ -1,1 +1,1 @@
-caffeine,awake,sleep,prevent,nosleep,presentation,meeting,jiggler,clamshell,timer
+caffeine,awake,sleep,prevent,nosleep,presentation,meeting,schedule,clamshell,timer
