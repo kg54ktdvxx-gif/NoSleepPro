@@ -18,6 +18,9 @@ protocol PowerManaging {
     ///   - reason: Why sleep prevention was activated
     func start(duration: Int?, allowDisplaySleep: Bool, reason: ActivationReason)
     
+    /// Start preventing sleep with a scenario preset (indefinite)
+    func start(scenario: ScenarioPreset, reason: ActivationReason)
+
     /// Stop preventing sleep
     func stop()
     

@@ -21,12 +21,24 @@ class MockPowerManager: PowerManaging {
     var lastDuration: Int?
     var lastAllowDisplaySleep: Bool?
     var lastReason: ActivationReason?
+    var lastScenario: ScenarioPreset?
 
     func start(duration: Int?, allowDisplaySleep: Bool, reason: ActivationReason) {
         startCallCount += 1
         lastDuration = duration
         lastAllowDisplaySleep = allowDisplaySleep
         lastReason = reason
+        lastScenario = nil
+        activationReason = reason
+        isRunning = true
+    }
+
+    func start(scenario: ScenarioPreset, reason: ActivationReason) {
+        startCallCount += 1
+        lastScenario = scenario
+        lastAllowDisplaySleep = scenario.allowDisplaySleep
+        lastReason = reason
+        lastDuration = nil
         activationReason = reason
         isRunning = true
     }
@@ -35,6 +47,7 @@ class MockPowerManager: PowerManaging {
         stopCallCount += 1
         isRunning = false
         activationReason = nil
+        lastScenario = nil
     }
 
     func reset() {
@@ -43,6 +56,7 @@ class MockPowerManager: PowerManaging {
         lastDuration = nil
         lastAllowDisplaySleep = nil
         lastReason = nil
+        lastScenario = nil
         isRunning = false
         activationReason = nil
     }
@@ -83,30 +97,44 @@ class MockAppState: AppStateManaging {
     var isActive: Bool = false
     var currentPreset: TimerPreset?
     var remainingSeconds: Int?
+    var activeScenario: ScenarioPreset?
 
     var activateCallCount = 0
     var deactivateCallCount = 0
+    var activateScenarioCallCount = 0
 
     func activate(with preset: TimerPreset) {
         activateCallCount += 1
         isActive = true
         currentPreset = preset
+        activeScenario = nil
         remainingSeconds = preset.seconds
+    }
+
+    func activate(with scenario: ScenarioPreset) {
+        activateScenarioCallCount += 1
+        isActive = true
+        activeScenario = scenario
+        currentPreset = nil
+        remainingSeconds = nil
     }
 
     func deactivate() {
         deactivateCallCount += 1
         isActive = false
         currentPreset = nil
+        activeScenario = nil
         remainingSeconds = nil
     }
 
     func reset() {
         isActive = false
         currentPreset = nil
+        activeScenario = nil
         remainingSeconds = nil
         activateCallCount = 0
         deactivateCallCount = 0
+        activateScenarioCallCount = 0
     }
 }
 

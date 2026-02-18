@@ -13,6 +13,7 @@ struct MenuBarView: View {
     @EnvironmentObject var settings: AppSettings
     @EnvironmentObject var automationManager: AutomationManager
 
+    @State private var showSmartModes = true
     @State private var showDurationPicker = false
     @State private var showCustomDuration = false
     @State private var customMinutes: String = ""
@@ -165,6 +166,35 @@ struct MenuBarView: View {
                 .padding(.horizontal, 20)
                 .padding(.vertical, 14)
                 .background(Color.awakeBlue.opacity(0.08))
+            } else if appState.isActive, let scenario = appState.activeScenario {
+                // Scenario mode indicator
+                HStack(spacing: 14) {
+                    ZStack {
+                        Circle()
+                            .fill(scenario.accentColor.opacity(0.15))
+                            .frame(width: 40, height: 40)
+
+                        Image(systemName: scenario.iconName)
+                            .font(.system(size: 20, weight: .semibold))
+                            .foregroundColor(scenario.accentColor)
+                            .symbolEffect(.pulse)
+                    }
+
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text(scenario.displayName)
+                            .font(.system(size: 14, weight: .semibold))
+                            .foregroundColor(.primary)
+
+                        Text(scenario.subtitle)
+                            .font(.system(size: 12))
+                            .foregroundColor(.secondary)
+                    }
+
+                    Spacer()
+                }
+                .padding(.horizontal, 20)
+                .padding(.vertical, 14)
+                .background(scenario.accentColor.opacity(0.08))
             } else if appState.isActive {
                 // Indefinite mode indicator with animation
                 HStack(spacing: 14) {
@@ -195,6 +225,60 @@ struct MenuBarView: View {
                 .padding(.vertical, 14)
                 .background(Color.awakeBlue.opacity(0.08))
             }
+
+            Divider()
+                .padding(.vertical, 4)
+
+            // Smart Modes section
+            VStack(alignment: .leading, spacing: 12) {
+                HStack {
+                    Image(systemName: "sparkles")
+                        .font(.system(size: 16, weight: .medium))
+                        .foregroundColor(.awakePurple)
+                        .frame(width: 24)
+
+                    Text("Smart Modes")
+                        .font(.system(size: 16, weight: .semibold))
+                        .foregroundColor(.primary)
+
+                    Spacer()
+
+                    Image(systemName: showSmartModes ? "chevron.down" : "chevron.right")
+                        .font(.system(size: 13, weight: .bold))
+                        .foregroundColor(.secondary)
+                        .animation(.easeInOut(duration: 0.15), value: showSmartModes)
+                }
+                .padding(.horizontal, 20)
+                .padding(.vertical, 12)
+                .frame(maxWidth: .infinity)
+                .contentShape(Rectangle())
+                .onTapGesture {
+                    withAnimation(.easeInOut(duration: 0.2)) {
+                        showSmartModes.toggle()
+                    }
+                }
+
+                if showSmartModes {
+                    VStack(spacing: 10) {
+                        ForEach(ScenarioPreset.allCases) { scenario in
+                            ScenarioButton(
+                                scenario: scenario,
+                                isSelected: appState.activeScenario == scenario,
+                                action: {
+                                    if appState.activeScenario == scenario {
+                                        deactivate()
+                                    } else {
+                                        activateScenario(scenario)
+                                    }
+                                }
+                            )
+                        }
+                    }
+                    .padding(.horizontal, 20)
+                    .transition(.move(edge: .top).combined(with: .opacity))
+                }
+            }
+            .padding(.bottom, 12)
 
             Divider()
                 .padding(.vertical, 4)
@@ -487,7 +571,18 @@ struct MenuBarView: View {
 
     @ViewBuilder
     private var statusSubtitle: some View {
-        if appState.isActive {
+        if appState.isActive, let scenario = appState.activeScenario {
+            HStack(spacing: 6) {
+                Circle()
+                    .fill(scenario.accentColor)
+                    .frame(width: 8, height: 8)
+                    .statusGlow(color: scenario.accentColor, isActive: true)
+
+                Text(scenario.displayName)
+                    .font(.system(size: 12, weight: .medium))
+                    .foregroundColor(scenario.accentColor)
+            }
+        } else if appState.isActive {
             HStack(spacing: 6) {
                 Circle()
                     .fill(Color.awakeGreen)
@@ -535,6 +630,15 @@ struct MenuBarView: View {
         automationManager.onAppStateChanged()
     }
 
+    private func activateScenario(_ scenario: ScenarioPreset) {
+        appState.activate(with: scenario)
+        caffeinateManager.start(
+            scenario: scenario,
+            reason: .scenario(name: scenario.displayName)
+        )
+        automationManager.onAppStateChanged()
+    }
+
     private func deactivate() {
         appState.deactivate()
         caffeinateManager.stop()
@@ -548,6 +652,7 @@ struct MenuBarView: View {
         case .appTrigger: return "app.badge"
         case .keyboardShortcut: return "keyboard"
         case .hardwareTrigger: return "cable.connector"
+        case .scenario: return "sparkles"
         }
     }
 
@@ -558,7 +663,106 @@ struct MenuBarView: View {
         case .appTrigger(let appName): return "Triggered by \(appName)"
         case .keyboardShortcut: return "Activated via shortcut"
         case .hardwareTrigger(let type): return "\(type) detected"
+        case .scenario(let name): return "Smart: \(name)"
         }
+    }
+}
+
+// MARK: - Scenario Button
+
+struct ScenarioButton: View {
+    let scenario: ScenarioPreset
+    let isSelected: Bool
+    let action: () -> Void
+
+    @State private var isHovering = false
+
+    var body: some View {
+        Button(action: {
+            withAnimation(.spring(response: 0.3, dampingFraction: 0.6)) {
+                action()
+            }
+        }) {
+            HStack(spacing: 12) {
+                ZStack {
+                    Circle()
+                        .fill(
+                            isSelected
+                                ? scenario.accentColor
+                                : scenario.accentColor.opacity(0.15)
+                        )
+                        .frame(width: 36, height: 36)
+
+                    Image(systemName: scenario.iconName)
+                        .font(.system(size: 16, weight: .semibold))
+                        .foregroundColor(isSelected ? .white : scenario.accentColor)
+                }
+
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(scenario.displayName)
+                        .font(.system(size: 14, weight: .semibold))
+                        .foregroundColor(isSelected ? .white : .primary)
+
+                    Text(scenario.subtitle)
+                        .font(.system(size: 11, weight: .medium))
+                        .foregroundColor(isSelected ? .white.opacity(0.8) : .secondary)
+                }
+
+                Spacer()
+
+                if isSelected {
+                    Image(systemName: "checkmark.circle.fill")
+                        .font(.system(size: 18, weight: .medium))
+                        .foregroundColor(.white)
+                }
+            }
+            .padding(.horizontal, 14)
+            .padding(.vertical, 12)
+            .background(
+                RoundedRectangle(cornerRadius: 12)
+                    .fill(
+                        isSelected
+                            ? LinearGradient(
+                                colors: [scenario.accentColor, scenario.accentColor.opacity(0.85)],
+                                startPoint: .top,
+                                endPoint: .bottom
+                              )
+                            : LinearGradient(
+                                colors: [
+                                    Color(nsColor: .controlBackgroundColor),
+                                    Color(nsColor: .controlBackgroundColor).opacity(0.9)
+                                ],
+                                startPoint: .top,
+                                endPoint: .bottom
+                              )
+                    )
+            )
+            .overlay(
+                RoundedRectangle(cornerRadius: 12)
+                    .strokeBorder(
+                        isSelected
+                            ? scenario.accentColor.opacity(0.6)
+                            : (isHovering ? Color.gray.opacity(0.4) : Color.gray.opacity(0.2)),
+                        lineWidth: isSelected ? 2 : 1.5
+                    )
+            )
+            .shadow(
+                color: isSelected ? scenario.accentColor.opacity(0.35) : Color.clear,
+                radius: 10,
+                x: 0,
+                y: 5
+            )
+            .scaleEffect(isHovering && !isSelected ? 1.01 : 1.0)
+            .brightness(isHovering && !isSelected ? 0.03 : 0)
+            .animation(.easeInOut(duration: 0.15), value: isHovering)
+        }
+        .buttonStyle(.plain)
+        .onHover { hovering in
+            isHovering = hovering
+        }
+        .accessibilityLabel(scenario.displayName)
+        .accessibilityHint(isSelected ? "Currently active, tap to deactivate" : "Tap to activate \(scenario.subtitle)")
+        .accessibilityAddTraits(isSelected ? .isSelected : [])
     }
 }
 

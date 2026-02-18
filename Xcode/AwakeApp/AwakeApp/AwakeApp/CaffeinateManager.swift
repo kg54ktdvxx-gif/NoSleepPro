@@ -37,6 +37,7 @@ enum ActivationReason: Equatable {
     case appTrigger(appName: String)
     case keyboardShortcut
     case hardwareTrigger(type: String)
+    case scenario(name: String)
 
     var description: String {
         switch self {
@@ -45,14 +46,15 @@ enum ActivationReason: Equatable {
         case .appTrigger(let appName): return "App: \(appName)"
         case .keyboardShortcut: return "Shortcut"
         case .hardwareTrigger(let type): return "Hardware: \(type)"
+        case .scenario(let name): return "Smart: \(name)"
         }
     }
 }
 
 @MainActor
 final class CaffeinateManager: ObservableObject {
-    /// Current power assertion ID (nil when not active)
-    private var assertionID: IOPMAssertionID?
+    /// Current power assertion IDs (empty when not active)
+    private var assertionIDs: [IOPMAssertionID] = []
 
     /// Timer for auto-stopping after duration
     private var durationTimer: Timer?
@@ -97,7 +99,7 @@ final class CaffeinateManager: ObservableObject {
         )
 
         if result == kIOReturnSuccess {
-            self.assertionID = assertionID
+            self.assertionIDs.append(assertionID)
             logger.info("Power assertion created (ID: \(assertionID), displaySleep: \(allowDisplaySleep), reason: \(reason.description))")
 
             // Set up duration timer if specified
@@ -112,32 +114,68 @@ final class CaffeinateManager: ObservableObject {
         }
     }
 
+    /// Start preventing sleep with a scenario preset (indefinite)
+    /// - Parameters:
+    ///   - scenario: The scenario preset to activate
+    ///   - reason: Why sleep prevention was activated
+    func start(scenario: ScenarioPreset, reason: ActivationReason) {
+        // Stop any existing assertion first
+        stop()
+
+        // Clear previous errors
+        lastError = nil
+        self.allowDisplaySleep = scenario.allowDisplaySleep
+        self.activationReason = reason
+
+        // Create power assertion using the scenario's assertion type
+        var assertionID: IOPMAssertionID = 0
+        let assertionName = "No Sleep Pro: \(scenario.displayName)" as CFString
+        let assertionType = scenario.assertionType as CFString
+
+        let result = IOPMAssertionCreateWithName(
+            assertionType,
+            IOPMAssertionLevel(kIOPMAssertionLevelOn),
+            assertionName,
+            &assertionID
+        )
+
+        if result == kIOReturnSuccess {
+            self.assertionIDs.append(assertionID)
+            logger.info("Scenario assertion created (ID: \(assertionID), scenario: \(scenario.displayName), type: \(scenario.assertionType))")
+        } else {
+            let error = PowerManagementError.assertionCreationFailed(result)
+            lastError = error
+            activationReason = nil
+            logger.error("Failed to create scenario assertion: \(error.localizedDescription)")
+        }
+    }
+
     /// Stop preventing sleep
     func stop() {
         // Cancel duration timer
         durationTimer?.invalidate()
         durationTimer = nil
 
-        // Release power assertion if active
-        guard let assertionID = assertionID else { return }
+        // Release all power assertions
+        for assertionID in assertionIDs {
+            let result = IOPMAssertionRelease(assertionID)
 
-        let result = IOPMAssertionRelease(assertionID)
-
-        if result == kIOReturnSuccess {
-            logger.info("Power assertion released successfully")
-        } else {
-            let error = PowerManagementError.assertionReleaseFailed(result)
-            lastError = error
-            logger.error("Failed to release power assertion: \(error.localizedDescription)")
+            if result == kIOReturnSuccess {
+                logger.info("Power assertion released (ID: \(assertionID))")
+            } else {
+                let error = PowerManagementError.assertionReleaseFailed(result)
+                lastError = error
+                logger.error("Failed to release power assertion: \(error.localizedDescription)")
+            }
         }
 
-        self.assertionID = nil
+        self.assertionIDs.removeAll()
         self.activationReason = nil
     }
 
     /// Check if sleep prevention is currently active
     var isRunning: Bool {
-        assertionID != nil
+        !assertionIDs.isEmpty
     }
 
     /// Set up timer to auto-stop after duration
@@ -190,7 +228,7 @@ final class CaffeinateManager: ObservableObject {
 
     /// Cleanup on deallocation
     deinit {
-        if let assertionID = assertionID {
+        for assertionID in assertionIDs {
             IOPMAssertionRelease(assertionID)
         }
         durationTimer?.invalidate()

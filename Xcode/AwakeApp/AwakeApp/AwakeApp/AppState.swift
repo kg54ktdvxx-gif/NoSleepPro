@@ -13,6 +13,7 @@ final class AppState: ObservableObject {
     @Published var isActive: Bool = false
     @Published var currentPreset: TimerPreset?
     @Published var remainingSeconds: Int?
+    @Published var activeScenario: ScenarioPreset?
 
     private var timer: Timer?
     private var expirationDate: Date?
@@ -20,6 +21,7 @@ final class AppState: ObservableObject {
     /// Activate sleep prevention with a timer preset
     func activate(with preset: TimerPreset) {
         self.currentPreset = preset
+        self.activeScenario = nil
         self.isActive = true
 
         if let seconds = preset.seconds {
@@ -33,10 +35,21 @@ final class AppState: ObservableObject {
         }
     }
 
+    /// Activate sleep prevention with a scenario preset (indefinite, no timer)
+    func activate(with scenario: ScenarioPreset) {
+        self.activeScenario = scenario
+        self.currentPreset = nil
+        self.isActive = true
+        self.remainingSeconds = nil
+        self.expirationDate = nil
+        stopCountdownTimer()
+    }
+
     /// Deactivate sleep prevention
     func deactivate() {
         self.isActive = false
         self.currentPreset = nil
+        self.activeScenario = nil
         self.remainingSeconds = nil
         self.expirationDate = nil
         stopCountdownTimer()
@@ -72,6 +85,10 @@ final class AppState: ObservableObject {
     var statusText: String {
         if !isActive {
             return "Inactive"
+        }
+
+        if let scenario = activeScenario {
+            return "Active (\(scenario.displayName))"
         }
 
         guard let remaining = remainingSeconds else {

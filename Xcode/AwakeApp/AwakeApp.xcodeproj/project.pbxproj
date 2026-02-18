@@ -24,6 +24,7 @@
 		FB9A85CD2F37746400707D89 /* CaffeinateManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB9A85CC2F37746400707D89 /* CaffeinateManagerTests.swift */; };
 		FB9A85CF2F37748400707D89 /* SettingsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB9A85CE2F37748400707D89 /* SettingsTests.swift */; };
 		FC3614B93ECA419131B6BC84 /* MockPowerManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F2CF23C131A9838DCA32DD0 /* MockPowerManager.swift */; };
+		A1B2C3D4E5F60718A9B0C1D2 /* ScenarioPresetTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3E4F5A6B7C8091E2F304152 /* ScenarioPresetTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -57,6 +58,7 @@
 		FB0245A42F212D190074EE8A /* AwakeApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AwakeApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FB9A85CC2F37746400707D89 /* CaffeinateManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaffeinateManagerTests.swift; sourceTree = "<group>"; };
 		FB9A85CE2F37748400707D89 /* SettingsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsTests.swift; sourceTree = "<group>"; };
+		D3E4F5A6B7C8091E2F304152 /* ScenarioPresetTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ScenarioPresetTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -132,6 +134,7 @@
 				7BDEB252B2801208C805F018 /* MenuBarIconStyleTests.swift */,
 				8E2C5E31A96E508C1F2777A6 /* ScheduleEntryTests.swift */,
 				8DB106B999CCD3B88606D69D /* ScheduleLogicTests.swift */,
+				D3E4F5A6B7C8091E2F304152 /* ScenarioPresetTests.swift */,
 				7D7E08D2745AB8C9740B4B23 /* TimerPresetTests.swift */,
 				21BC176BBBB25EF8FA8FA403 /* TriggerModelsTests.swift */,
 				FDBC5EA881C7EDD04F0C1C65 /* Integration */,
@@ -297,6 +300,7 @@
 				E01A7348DDC9B92E4ED4E655 /* ErrorHandlingIntegrationTests.swift in Sources */,
 				C36E35F0B3B54AAF9F81D143 /* NotificationIntegrationTests.swift in Sources */,
 				FC3614B93ECA419131B6BC84 /* MockPowerManager.swift in Sources */,
+				A1B2C3D4E5F60718A9B0C1D2 /* ScenarioPresetTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -34,6 +34,11 @@ final class ActivationReasonTests: XCTestCase {
         XCTAssertEqual(reason.description, "Hardware: Power connected")
     }
 
+    func testScenarioDescription() {
+        let reason = ActivationReason.scenario(name: "Claude Code")
+        XCTAssertEqual(reason.description, "Smart: Claude Code")
+    }
+
     // MARK: - Equatable Tests
 
     func testEquatable() {
@@ -57,6 +62,15 @@ final class ActivationReasonTests: XCTestCase {
         XCTAssertNotEqual(
             ActivationReason.hardwareTrigger(type: "Power"),
             ActivationReason.hardwareTrigger(type: "Display")
+        )
+
+        XCTAssertEqual(
+            ActivationReason.scenario(name: "Claude Code"),
+            ActivationReason.scenario(name: "Claude Code")
+        )
+        XCTAssertNotEqual(
+            ActivationReason.scenario(name: "Claude Code"),
+            ActivationReason.scenario(name: "Browser Active")
         )
     }
 
