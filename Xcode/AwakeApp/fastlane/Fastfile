@@ -46,6 +46,10 @@ platform :mac do
       api_key: @api_key,
       submit_for_review: true,
       automatic_release: false,
+      skip_binary_upload: true,
+      skip_metadata: true,
+      skip_screenshots: true,
+      skip_app_version_update: true,
       force: true
     )
   end
